@@ -372,6 +372,16 @@ body{
 .f-row2 .fd-status{flex:0 0 40px;font-size:9.5px;padding:2px 5px;border-radius:8px;text-align:center}
 .f-empty{padding:26px;text-align:center;color:var(--dim);font-size:12px}
 
+
+/* 月度通报报表 */
+.report-table{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap}
+.report-table th{background:var(--card2);color:#8aa0c8;font-weight:600;padding:8px 10px;text-align:center;border:1px solid var(--line);position:sticky;left:0}
+.report-table td{padding:7px 10px;text-align:center;border:1px solid var(--line);color:#d6e0f5}
+.report-table td:first-child{text-align:left;font-weight:600;color:#fff;position:sticky;left:0;background:var(--card)}
+.report-table .report-total td{background:var(--card2);font-weight:700;color:#fff}
+.report-table .report-total td:first-child{background:var(--card2)}
+.report-table .pct-good{background:rgba(34,197,94,.18);color:#4ade80;font-weight:700}
+.report-table .pct-bad{background:rgba(239,68,68,.18);color:#f87171;font-weight:700}
 </style>
 </head>
 <body>
@@ -758,8 +768,9 @@ function renderData(){
       <div class="chip ${dataTab==='store'?'active':''}" onclick="dataTab='store';renderData()">门店数据</div>
       <div class="chip ${dataTab==='order'?'active':''}" onclick="dataTab='order';renderData()">订单明细</div>
       <div class="chip ${dataTab==='filter'?'active':''}" onclick="dataTab='filter';renderData()">人员筛选</div>
+      <div class="chip ${dataTab==='report'?'active':''}" onclick="dataTab='report';renderData()">月度通报</div>
     </div>
-    <div id="data-body">${dataTab==='store'?renderStoreData():dataTab==='order'?renderOrderData():renderFilter()}</div>
+    <div id="data-body">${dataTab==='store'?renderStoreData():dataTab==='order'?renderOrderData():dataTab==='report'?renderMonthlyReport():renderFilter()}</div>
   `;
   views.data.innerHTML=html;
 }
@@ -1035,6 +1046,123 @@ function donutSVG(pct){
     <circle cx="48" cy="48" r="${r}" fill="none" stroke="#22c55e" stroke-width="11" stroke-linecap="round"
       stroke-dasharray="${c}" stroke-dashoffset="${off}" transform="rotate(-90 48 48)" style="transition:stroke-dashoffset .8s ease"/>
   </svg>`;
+}
+
+
+/* ===== 月度通报 ===== */
+function renderMonthlyReport(){
+  const r = {
+    month: '2026年9月',
+    timeProgress: 65.52,
+    // 表1: 地市经理/主管 注册与门店情况
+    register: {
+      cols: ['地市经理/主管','年度总收入','月度总收入','本月注册目标','注册达成','注册达成率','26年总注册量','本月活跃客户目标','活跃达成','活跃达成率','26年总活跃门店数'],
+      rows: [
+        ['田冰','40752.33','3126.20','100','21','21.00%','399','30','10','33.33%','72'],
+        ['丁园','32708.73','1770.05','100','10','10.00%','547','30','13','43.33%','90'],
+        ['冯龙海','0.00','0.00','-','-','-','-','-','-','-','-'],
+        ['付天松','0.00','0.00','-','-','-','-','-','-','-','-'],
+        ['总计','73461.06','4896.25','200','31','15.50%','946','60','23','38.33%','162']
+      ]
+    },
+    // 表2: 地市主管9月收入一览表
+    income: {
+      cols: ['地市主管','月度收入排名','总收入','国补收入','分销收入','代发收入'],
+      rows: [
+        ['田冰','1','11697.96','3126.20','0.00','8571.76'],
+        ['丁园','2','1770.05','1694.67','75.38','0.00']
+      ]
+    },
+    // 表3: 国补业务
+    guobu: {
+      cols: ['地市经理/主管','台数','9月GMV目标(元)','达成','达成率'],
+      rows: [
+        ['田冰','32','600000','89320','14.89%'],
+        ['丁园','18','600000','48419','8.07%'],
+        ['冯龙海','0','300000','0','0.00%'],
+        ['付天松','0','300000','0','0.00%'],
+        ['总计','50','1200000','137739','11.48%']
+      ]
+    },
+    // 表4: 分销业务
+    fenxiao: {
+      cols: ['地市经理/主管','台数','9月GMV目标(元)','达成','达成率'],
+      rows: [
+        ['田冰','0','900000','0','0.00%'],
+        ['丁园','23','100000','37692','37.69%'],
+        ['冯龙海','0','300000','0','0.00%'],
+        ['付天松','0','300000','0','0.00%'],
+        ['总计','23','800000','37692','4.71%']
+      ]
+    },
+    // 表5: 购机通9月GMV达成
+    gmv: {
+      cols: ['地市经理/主管','目标','达成','达成率'],
+      rows: [
+        ['田冰','700000','89320','12.76%'],
+        ['丁园','700000','86111','12.30%'],
+        ['冯龙海','500000','0','0.00%'],
+        ['付天松','500000','0','0.00%'],
+        ['总计','2400000','175431','7.31%']
+      ]
+    }
+  };
+
+  // 达成率配色: >=10% 绿, <10% 红
+  function pctClass(v){
+    if(v==='-') return '';
+    const n = parseFloat(v);
+    if(isNaN(n)) return '';
+    return n >= 10 ? 'pct-good' : 'pct-bad';
+  }
+  // 排名配色: 1绿 2红
+  function rankClass(v){
+    if(v==='1') return 'pct-good';
+    if(v==='2') return 'pct-bad';
+    return '';
+  }
+
+  function renderTable(title, cols, rows, pctColIdx, rankColIdx){
+    let html = '<div class="section-title"><span class="bar"></span>'+title+'</div>';
+    html += '<div class="card" style="margin-bottom:12px;overflow-x:auto;-webkit-overflow-scrolling:touch"><table class="report-table"><thead><tr>';
+    cols.forEach(c=>{ html += '<th>'+c+'</th>'; });
+    html += '</tr></thead><tbody>';
+    rows.forEach(row=>{
+      const isTotal = row[0]==='总计';
+      html += '<tr'+(isTotal?' class="report-total"':'')+'>';
+      row.forEach((cell,ci)=>{
+        let cls='';
+        if(pctColIdx!==undefined && ci===pctColIdx) cls=pctClass(cell);
+        if(rankColIdx!==undefined && ci===rankColIdx) cls=rankClass(cell);
+        html += '<td class="'+cls+'">'+cell+'</td>';
+      });
+      html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+    return html;
+  }
+
+  let html = '';
+  // 顶部标题 + 时间进度
+  html += '<div class="section-title"><span class="bar"></span>购机通 '+r.month+' 通报数据</div>';
+  html += '<div class="card" style="margin-bottom:12px;display:flex;align-items:center;justify-content:space-between">';
+  html += '<div><div style="font-size:13px;color:#8aa0c8">时间进度</div><div style="font-size:22px;font-weight:700;color:#f59e0b">'+r.timeProgress.toFixed(2)+'%</div></div>';
+  html += '<div style="flex:1;margin-left:16px"><div style="height:8px;background:var(--line);border-radius:4px;overflow:hidden"><div style="height:100%;width:'+r.timeProgress+'%;background:linear-gradient(90deg,#f59e0b,#fbbf24)"></div></div></div>';
+  html += '</div>';
+
+  // 表1
+  html += renderTable('地市经理/主管 · 注册与门店情况', r.register.cols, r.register.rows, 5, undefined);
+  // 表2
+  html += renderTable('地市主管 · 9月收入一览表', r.income.cols, r.income.rows, undefined, 1);
+  // 表3
+  html += renderTable('国补业务', r.guobu.cols, r.guobu.rows, 4, undefined);
+  // 表4
+  html += renderTable('分销业务', r.fenxiao.cols, r.fenxiao.rows, 4, undefined);
+  // 表5
+  html += renderTable('购机通9月GMV达成', r.gmv.cols, r.gmv.rows, 3, undefined);
+
+  html += '<div class="foot-note">数据来源: 购机通 '+r.month+' 通报 · 更新时间 2026-09-20</div>';
+  return html;
 }
 
 /* ===== 详情 / 要点速览 ===== */
