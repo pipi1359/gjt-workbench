@@ -1049,74 +1049,209 @@ function donutSVG(pct){
 }
 
 
-/* ===== 月度通报 ===== */
+/* ===== 月度通报（实时计算） ===== */
 function renderMonthlyReport(){
-  // 达成率颜色: g=绿 r=红 n=无(默认)
-  // 列: 姓名|年收入|月收入|注册目标|注册达成|注册率|26总注册|活跃目标|活跃达成|活跃率|26活跃门店|国补台|国补目标|国补达成|国补率|分销台|分销目标|分销达成|分销率|GMV目标|GMV达成|GMV率
-  var rows = [
-    {n:'田冰', v:['40752.33','3126.20','100','21','21.00%','399','30','10','33.33%','72','32','600000','89320','14.89%','0','900000','0','0.00%','700000','89320','12.76%'], cl:['','','','','g','','','','r','','','','','g','','','','r','','','','g']},
-    {n:'丁园', v:['32708.73','1770.05','100','10','10.00%','547','30','13','43.33%','90','18','600000','48419','8.07%','23','100000','37692','37.69%','700000','86111','12.30%'], cl:['','','','','r','','','','g','','','','','r','','','','g','','','','g']},
-    {n:'冯龙海', v:['0.00','0.00','-','-','-','-','-','-','-','-','0','300000','0','0.00%','0','300000','0','0.00%','500000','0','0.00%'], cl:['','','','','','','','','','','','','','r','','','','r','','','','r']},
-    {n:'付天松', v:['0.00','0.00','-','-','-','-','-','-','-','-','0','300000','0','0.00%','0','300000','0','0.00%','500000','0','0.00%'], cl:['','','','','','','','','','','','','','r','','','','r','','','','r']},
-    {n:'总计', v:['73461.06','4896.25','200','31','15.50%','946','60','23','38.33%','162','50','1200000','137739','11.48%','23','800000','37692','4.71%','2400000','175431','7.31%'], cl:['','','','','g','','','','g','','','','','n','','','','n','','','','n'], total:true}
-  ];
+  // 目标配置（每月目标值，如需调整改这里）
+  var cfg = {
+    month: '2026-09',
+    monthLabel: '2026年9月',
+    bosses: [
+      {name:'田冰', regTarget:100, activeTarget:30, gbTarget:600000, fxTarget:900000, gmvTarget:700000},
+      {name:'丁园', regTarget:100, activeTarget:30, gbTarget:600000, fxTarget:100000, gmvTarget:700000},
+      {name:'冯龙海', regTarget:0, activeTarget:0, gbTarget:300000, fxTarget:300000, gmvTarget:500000},
+      {name:'付天松', regTarget:0, activeTarget:0, gbTarget:300000, fxTarget:300000, gmvTarget:500000}
+    ]
+  };
 
-  function cls(c){
-    if(c==='g') return 'pct-good';
-    if(c==='r') return 'pct-bad';
-    return '';
+  var orders = DATA.order.detail || [];
+  var stores = DATA.store.detail || [];
+  var ym = cfg.month;           // '2026-09'
+  var y = ym.split('-')[0];     // '2026'
+
+  // 时间进度
+  var now = new Date();
+  var daysInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+  var timePct = Math.round(now.getDate()/daysInMonth*10000)/100;
+
+  // 按人计算
+  var rows = [];
+  var tot = {regT:0, regD:0, actT:0, actD:0, regY:0, actY:0,
+             gbN:0, gbA:0, gbT:0, fxN:0, fxA:0, fxT:0, gmvT:0, gmvA:0,
+             yearAmt:0, monthAmt:0};
+
+  cfg.bosses.forEach(function(b){
+    var on = b.name;
+    // 订单
+    var yearOrders = orders.filter(function(o){return o.bd===on && (o.date||'').indexOf(y)===0;});
+    var monOrders  = orders.filter(function(o){return o.bd===on && (o.date||'').indexOf(ym)===0;});
+    var gbMon = monOrders.filter(function(o){return o.type==='国补订单';});
+    var fxMon = monOrders.filter(function(o){return o.type==='钱保'||o.type==='自营分销';});
+
+    var yearAmt = yearOrders.reduce(function(s,o){return s+(o.amount||0);},0);
+    var monthAmt = monOrders.reduce(function(s,o){return s+(o.amount||0);},0);
+    var gbA = gbMon.reduce(function(s,o){return s+(o.amount||0);},0);
+    var fxA = fxMon.reduce(function(s,o){return s+(o.amount||0);},0);
+
+    // 门店
+    var bs = stores.filter(function(s){return s.bd===on;});
+    var regY = bs.filter(function(s){return (s.created||'').indexOf(y)===0;}).length;
+    var regD = bs.filter(function(s){return (s.created||'').indexOf(ym)===0;}).length;
+    // 活跃：2026年有出单的门店（first_order 在2026年 或 done=1且created在2026）
+    var actY = bs.filter(function(s){
+      var fo = s.first_order||'';
+      if(fo.indexOf(y)===0) return true;
+      if(s.done===1 && (s.created||'').indexOf(y)===0) return true;
+      return false;
+    }).length;
+    var actD = bs.filter(function(s){return (s.first_order||'').indexOf(ym)===0;}).length;
+
+    // 达成率
+    function pct(done, target){
+      if(!target || target<=0) return '-';
+      return (Math.round(done/target*10000)/100).toFixed(2)+'%';
+    }
+    function pctNum(done, target){
+      if(!target || target<=0) return -1;
+      return done/target*100;
+    }
+
+    rows.push({
+      name: on,
+      yearAmt: yearAmt.toFixed(2),
+      monthAmt: monthAmt.toFixed(2),
+      regTarget: b.regTarget||'-',
+      regDone: regD,
+      regPct: pct(regD, b.regTarget),
+      regPctN: pctNum(regD, b.regTarget),
+      regYear: regY,
+      actTarget: b.activeTarget||'-',
+      actDone: actD,
+      actPct: pct(actD, b.activeTarget),
+      actPctN: pctNum(actD, b.activeTarget),
+      actYear: actY,
+      gbN: gbMon.length,
+      gbTarget: b.gbTarget,
+      gbA: Math.round(gbA),
+      gbPct: pct(gbA, b.gbTarget),
+      gbPctN: pctNum(gbA, b.gbTarget),
+      fxN: fxMon.length,
+      fxTarget: b.fxTarget,
+      fxA: Math.round(fxA),
+      fxPct: pct(fxA, b.fxTarget),
+      fxPctN: pctNum(fxA, b.fxTarget),
+      gmvTarget: b.gmvTarget,
+      gmvA: Math.round(monthAmt),
+      gmvPct: pct(monthAmt, b.gmvTarget),
+      gmvPctN: pctNum(monthAmt, b.gmvTarget)
+    });
+
+    tot.regT+=b.regTarget; tot.regD+=regD;
+    tot.actT+=b.activeTarget; tot.actD+=actD;
+    tot.regY+=regY; tot.actY+=actY;
+    tot.gbN+=gbMon.length; tot.gbA+=Math.round(gbA); tot.gbT+=b.gbTarget;
+    tot.fxN+=fxMon.length; tot.fxA+=Math.round(fxA); tot.fxT+=b.fxTarget;
+    tot.gmvT+=b.gmvTarget; tot.gmvA+=Math.round(monthAmt);
+    tot.yearAmt+=yearAmt; tot.monthAmt+=monthAmt;
+  });
+
+  function pctCls(n){
+    if(n<0) return '';
+    return n>=10 ? 'pct-good' : 'pct-bad';
+  }
+  function fmt(n){
+    return n.toLocaleString('zh-CN');
   }
 
+  // 总达成率
+  var totRegPct = tot.regT>0 ? (Math.round(tot.regD/tot.regT*10000)/100).toFixed(2)+'%' : '-';
+  var totActPct = tot.actT>0 ? (Math.round(tot.actD/tot.actT*10000)/100).toFixed(2)+'%' : '-';
+  var totGbpct = tot.gbT>0 ? (Math.round(tot.gbA/tot.gbT*10000)/100).toFixed(2)+'%' : '-';
+  var totFxpct = tot.fxT>0 ? (Math.round(tot.fxA/tot.fxT*10000)/100).toFixed(2)+'%' : '-';
+  var totGmvpct = tot.gmvT>0 ? (Math.round(tot.gmvA/tot.gmvT*10000)/100).toFixed(2)+'%' : '-';
+
   var h = '';
-  h += '<div class="section-title"><span class="bar"></span>购机通 2026年9月 通报数据</div>';
+  h += '<div class="section-title"><span class="bar"></span>购机通 '+cfg.monthLabel+' 通报数据</div>';
   // 时间进度
   h += '<div class="card" style="margin-bottom:12px;display:flex;align-items:center;gap:14px">';
-  h += '<div><div style="font-size:12px;color:#8aa0c8">时间进度</div><div style="font-size:22px;font-weight:700;color:#f59e0b">65.52%</div></div>';
-  h += '<div style="flex:1"><div style="height:8px;background:var(--line);border-radius:4px;overflow:hidden"><div style="height:100%;width:65.52%;background:linear-gradient(90deg,#f59e0b,#fbbf24)"></div></div></div>';
+  h += '<div><div style="font-size:12px;color:#8aa0c8">时间进度</div><div style="font-size:22px;font-weight:700;color:#f59e0b">'+timePct.toFixed(2)+'%</div></div>';
+  h += '<div style="flex:1"><div style="height:8px;background:var(--line);border-radius:4px;overflow:hidden"><div style="height:100%;width:'+Math.min(timePct,100)+'%;background:linear-gradient(90deg,#f59e0b,#fbbf24)"></div></div></div>';
   h += '</div>';
 
   // 主大表
   h += '<div class="card" style="margin-bottom:12px;overflow-x:auto;-webkit-overflow-scrolling:touch">';
   h += '<table class="report-table" style="min-width:1100px"><thead>';
-  // 分组表头
   h += '<tr>';
   h += '<th rowspan="2" style="vertical-align:middle">地市经理/主管</th>';
-  h += '<th colspan="2">收入(元)</th>';
+  h += '<th colspan="2">订单额(元)</th>';
   h += '<th colspan="4">本月注册</th>';
   h += '<th colspan="4">本月活跃门店</th>';
   h += '<th colspan="4">国补业务</th>';
   h += '<th colspan="4">分销业务</th>';
-  h += '<th colspan="3">购机通9月GMV</th>';
+  h += '<th colspan="3">购机通本月GMV</th>';
   h += '</tr><tr>';
-  h += '<th>年度</th><th>月度</th>';
-  h += '<th>目标</th><th>达成</th><th>达成率</th><th>26年总注册</th>';
-  h += '<th>目标</th><th>达成</th><th>达成率</th><th>26年总门店</th>';
+  h += '<th>年度</th><th>本月</th>';
+  h += '<th>目标</th><th>达成</th><th>达成率</th><th>26年累计</th>';
+  h += '<th>目标</th><th>达成</th><th>达成率</th><th>26年累计</th>';
   h += '<th>台数</th><th>GMV目标</th><th>达成</th><th>达成率</th>';
   h += '<th>台数</th><th>GMV目标</th><th>达成</th><th>达成率</th>';
   h += '<th>目标</th><th>达成</th><th>达成率</th>';
   h += '</tr></thead><tbody>';
 
-  rows.forEach(function(row){
-    h += '<tr'+(row.total?' class="report-total"':'')+'>';
-    h += '<td class="'+(row.total?'':'')+'">'+row.n+'</td>';
-    row.v.forEach(function(cell, i){
-      var cc = row.cl[i] || '';
-      h += '<td class="'+cls(cc)+'">'+cell+'</td>';
-    });
+  rows.forEach(function(r){
+    h += '<tr>';
+    h += '<td>'+r.name+'</td>';
+    h += '<td>'+fmt(r.yearAmt)+'</td>';
+    h += '<td>'+fmt(r.monthAmt)+'</td>';
+    h += '<td>'+r.regTarget+'</td>';
+    h += '<td>'+r.regDone+'</td>';
+    h += '<td class="'+pctCls(r.regPctN)+'">'+r.regPct+'</td>';
+    h += '<td>'+r.regYear+'</td>';
+    h += '<td>'+r.actTarget+'</td>';
+    h += '<td>'+r.actDone+'</td>';
+    h += '<td class="'+pctCls(r.actPctN)+'">'+r.actPct+'</td>';
+    h += '<td>'+r.actYear+'</td>';
+    h += '<td>'+r.gbN+'</td>';
+    h += '<td>'+fmt(r.gbTarget)+'</td>';
+    h += '<td>'+fmt(r.gbA)+'</td>';
+    h += '<td class="'+pctCls(r.gbPctN)+'">'+r.gbPct+'</td>';
+    h += '<td>'+r.fxN+'</td>';
+    h += '<td>'+fmt(r.fxTarget)+'</td>';
+    h += '<td>'+fmt(r.fxA)+'</td>';
+    h += '<td class="'+pctCls(r.fxPctN)+'">'+r.fxPct+'</td>';
+    h += '<td>'+fmt(r.gmvTarget)+'</td>';
+    h += '<td>'+fmt(r.gmvA)+'</td>';
+    h += '<td class="'+pctCls(r.gmvPctN)+'">'+r.gmvPct+'</td>';
     h += '</tr>';
   });
-  h += '</tbody></table></div>';
 
-  // 第二张小表: 地市主管收入一览
-  h += '<div class="section-title"><span class="bar"></span>地市主管 · 9月收入一览</div>';
-  h += '<div class="card" style="margin-bottom:12px;overflow-x:auto"><table class="report-table" style="min-width:600px"><thead><tr>';
-  h += '<th>地市主管</th><th>月度排名</th><th>总收入</th><th>国补收入</th><th>分销收入</th><th>代发收入</th>';
-  h += '</tr></thead><tbody>';
-  h += '<tr><td>田冰</td><td class="pct-good">1</td><td>11697.96</td><td>3126.20</td><td>0.00</td><td>8571.76</td></tr>';
-  h += '<tr><td>丁园</td><td class="pct-bad">2</td><td>1770.05</td><td>1694.67</td><td>75.38</td><td>0.00</td></tr>';
-  h += '</tbody></table></div>';
+  // 总计行
+  h += '<tr class="report-total">';
+  h += '<td>总计</td>';
+  h += '<td>'+fmt(Math.round(tot.yearAmt))+'</td>';
+  h += '<td>'+fmt(Math.round(tot.monthAmt))+'</td>';
+  h += '<td>'+tot.regT+'</td>';
+  h += '<td>'+tot.regD+'</td>';
+  h += '<td>'+totRegPct+'</td>';
+  h += '<td>'+tot.regY+'</td>';
+  h += '<td>'+tot.actT+'</td>';
+  h += '<td>'+tot.actD+'</td>';
+  h += '<td>'+totActPct+'</td>';
+  h += '<td>'+tot.actY+'</td>';
+  h += '<td>'+tot.gbN+'</td>';
+  h += '<td>'+fmt(tot.gbT)+'</td>';
+  h += '<td>'+fmt(tot.gbA)+'</td>';
+  h += '<td>'+totGbpct+'</td>';
+  h += '<td>'+tot.fxN+'</td>';
+  h += '<td>'+fmt(tot.fxT)+'</td>';
+  h += '<td>'+fmt(tot.fxA)+'</td>';
+  h += '<td>'+totFxpct+'</td>';
+  h += '<td>'+fmt(tot.gmvT)+'</td>';
+  h += '<td>'+fmt(tot.gmvA)+'</td>';
+  h += '<td>'+totGmvpct+'</td>';
+  h += '</tr>';
 
-  h += '<div class="foot-note">数据来源: 购机通 2026年9月 通报 · 更新时间 2026-09-20</div>';
+  h += '</tbody></table></div>';
+  h += '<div class="foot-note">数据自动从订单/门店明细实时计算 · 目标值为配置项 · 更新 '+esc(DATA.generated||'')+'</div>';
   return h;
 }
 
