@@ -1438,5 +1438,20 @@ window.addEventListener('DOMContentLoaded',()=>{
 })();
 
 </script>
+<script>
+// 每60秒检查一次数据更新，有新数据自动刷新
+var lastGen = '';
+try { lastGen = (typeof DATA !== 'undefined' && DATA.generated) ? DATA.generated : ''; } catch(e) {}
+setInterval(function() {
+  fetch('data.json?t=' + Date.now())
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d && d.generated && d.generated !== lastGen) {
+        location.reload();
+      }
+    })
+    .catch(function() {});
+}, 60000);
+</script>
 </body>
 </html>
