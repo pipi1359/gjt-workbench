@@ -723,7 +723,7 @@ function renderQA(){
   const html=`
     <div class="section-title"><span class="bar"></span>常见问答</div>
     <div class="qa-search">${ICONS.qa}
-      <input id="qa-input" placeholder="搜索问题 / 关键词" value="${esc(qaState.kw)}" oninput="qaState.kw=this.value;renderQA()">
+      <input id="qa-input" placeholder="搜索问题 / 关键词" value="${esc(qaState.kw)}" oninput="qaState.kw=this.value;clearTimeout(window.__qaT);window.__qaT=setTimeout(renderQA,300)">
     </div>
     <div class="chip-scroll">
       ${cats.map(c=>`<div class="chip ${qaState.cat===c?'active':''}" onclick="qaState.cat='${esc(c)}';renderQA()">${esc(c)}</div>`).join('')}
