@@ -816,7 +816,7 @@ function renderStoreData(){
 
     <div class="section-title"><span class="bar"></span>每日新增 / 首次出单</div>
     ${renderStoreDaily()}
-    <div class="foot-note">累计门店 ${s.kpi.total} 家 · 数据源 ${esc(s.meta.source||'')}</div>
+    <div class="foot-note">累计门店 ${s.kpi.total} 家 · 数据源 ${esc(s.meta.source||'')}</div><div style="text-align:center;margin:16px 0"><a href="javascript:void(0)" onclick="dataTab='filter';renderData()" style="background:var(--blue);color:#fff;padding:10px 24px;border-radius:8px;text-decoration:none;font-size:14px">查看门店明细筛选 →</a></div>
   `;
   return html;
 }
@@ -900,7 +900,7 @@ function renderOrderData(){
 
     <div class="section-title"><span class="bar"></span>BD 每日经营明细</div>
     ${renderBDDaily()}
-    <div class="foot-note">订单覆盖 ${o.meta.date_min||''} 至 ${o.meta.date_max||''} · 数据源 ${esc(o.meta.source||'')}</div>
+    <div class="foot-note">订单覆盖 ${o.meta.date_min||''} 至 ${o.meta.date_max||''} · 数据源 ${esc(o.meta.source||'')}</div><div style="text-align:center;margin:16px 0"><a href="javascript:void(0)" onclick="dataTab='filter';renderData()" style="background:var(--blue);color:#fff;padding:10px 24px;border-radius:8px;text-decoration:none;font-size:14px">查看订单明细筛选 →</a></div>
   `;
   return html;
 }
