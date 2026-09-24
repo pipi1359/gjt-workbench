@@ -721,11 +721,10 @@ function renderQA(){
     return cOk&&kOk;
   });
   const html=`
-    <div class="section-title"><span class="bar"></span>常见问答 <a href="https://gcn2qi0l7mev.feishu.cn/sheets/L4mIsn06Ahxb15trHPEcErM8nid" target="_blank" style="margin-left:auto;font-size:12px;background:#22c55e;color:#fff;padding:4px 12px;border-radius:6px;text-decoration:none">编辑 QA</a></div>
-    <div class="qa-search">${ICONS.qa}
+    <div class="section-title"><span class="bar"></span>常见问答</div>
+    <div style="display:flex;gap:8px;margin-bottom:12px"><div class="qa-search" style="flex:1">${ICONS.qa}
       <input id="qa-input" placeholder="搜索问题 / 关键词" value="${esc(qaState.kw)}" oninput="qaState.kw=this.value;clearTimeout(window.__qaT);window.__qaT=setTimeout(renderQA,300)">
-    </div>
-    <div class="chip-scroll">
+    </div><a href="https://gcn2qi0l7mev.feishu.cn/sheets/L4mIsn06Ahxb15trHPEcErM8nid" target="_blank" style="flex:0 0 auto;background:#22c55e;color:#fff;padding:0 16px;border-radius:8px;text-decoration:none;font-size:13px;display:flex;align-items:center">编辑</a></div><div class="chip-scroll">
       ${cats.map(c=>`<div class="chip ${qaState.cat===c?'active':''}" onclick="qaState.cat='${esc(c)}';renderQA()">${esc(c)}</div>`).join('')}
     </div>
     <div id="qa-list">
