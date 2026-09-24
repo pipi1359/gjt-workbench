@@ -721,7 +721,7 @@ function renderQA(){
     return cOk&&kOk;
   });
   const html=`
-    <div class="section-title"><span class="bar"></span>常见问答</div>
+    <div class="section-title"><span class="bar"></span>常见问答 <a href="https://gcn2qi0l7mev.feishu.cn/sheets/L4mIsn06Ahxb15trHPEcErM8nid" target="_blank" style="margin-left:auto;font-size:12px;background:#22c55e;color:#fff;padding:4px 12px;border-radius:6px;text-decoration:none">编辑 QA</a></div>
     <div class="qa-search">${ICONS.qa}
       <input id="qa-input" placeholder="搜索问题 / 关键词" value="${esc(qaState.kw)}" oninput="qaState.kw=this.value;clearTimeout(window.__qaT);window.__qaT=setTimeout(renderQA,300)">
     </div>
