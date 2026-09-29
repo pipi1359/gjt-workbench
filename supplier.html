@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>购机通 · 供应商操作指南</title>
+<style>
+:root{--bg:#0b1220;--bg2:#111a2e;--card:#141e33;--line:rgba(40,56,90,.55);--text:#e6edf7;--sub:#9db1cf;--dim:#6b7f9e;--blue:#3b82f6;--blue2:#9ecbff;--green:#22c55e;--orange:#f97316;--purple:#a78bfa;--cyan:#22d3ee}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.app-header{position:sticky;top:0;z-index:20;background:linear-gradient(135deg,#0e1830 0%,#0b1220 100%);border-bottom:1px solid var(--line);padding:14px 16px calc(14px + env(safe-area-inset-top));backdrop-filter:blur(8px)}
+.app-header h1{font-size:17px;font-weight:700;letter-spacing:.5px}
+.app-header .sub{font-size:11px;color:var(--sub);margin-top:3px}
+.app-main{max-width:640px;margin:0 auto;padding:14px 14px calc(30px + env(safe-area-inset-bottom))}
+.section-title{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;margin:18px 2px 10px}
+.section-title .bar{width:4px;height:16px;border-radius:2px;background:var(--blue);flex:0 0 auto}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;border-radius:6px;background:rgba(59,130,246,.15);color:var(--blue2);font-size:12px;font-weight:700;padding:0 6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:13px;overflow:hidden;margin-bottom:10px}
+.card .c-head{display:flex;align-items:center;gap:8px;padding:12px 14px;font-size:13.5px;font-weight:700;border-bottom:1px solid var(--line);cursor:pointer}
+.card .c-head .arr{margin-left:auto;color:var(--dim);font-size:11px;transition:transform .2s}
+.card.open .c-head .arr{transform:rotate(90deg)}
+.card .c-body{display:none;padding:4px 14px 12px}
+.card.open .c-body{display:block}
+.step{margin-top:12px}
+.step .s-t{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--blue2)}
+.step .s-t .dot{flex:0 0 auto;width:20px;height:20px;border-radius:50%;border:1.5px solid var(--blue);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--blue2);margin-top:0}
+.step .s-desc{font-size:12px;color:var(--sub);margin-top:6px;line-height:1.7}
+.step .s-desc b{color:var(--text)}
+.step .s-img{margin-top:8px}
+.step .s-img img{width:100%;border-radius:8px;background:#0d1526;display:block;cursor:zoom-in}
+.step .s-img .cap{font-size:10.5px;color:var(--dim);margin-top:4px}
+.note-list{font-size:12.5px;line-height:1.9;color:var(--text)}
+.note-list li{margin-bottom:6px;list-style:none;padding-left:18px;position:relative}
+.note-list li:before{content:"·";position:absolute;left:4px;color:var(--blue2);font-weight:700}
+.qa-item{background:var(--card);border:1px solid var(--line);border-radius:13px;margin-bottom:9px;overflow:hidden}
+.qa-item .q{padding:12px 14px;font-size:13px;font-weight:700;display:flex;gap:8px;align-items:flex-start}
+.qa-item .q .tag{flex:0 0 auto;background:rgba(249,115,22,.15);color:var(--orange);font-size:10.5px;border-radius:5px;padding:2px 6px;margin-top:1px}
+.qa-item .a{padding:0 14px 12px 40px;font-size:12.5px;color:var(--sub);line-height:1.8;border-top:1px dashed rgba(34,48,74,.6)}
+.qa-item .a .tag2{flex:0 0 auto;background:rgba(34,197,94,.15);color:var(--green);font-size:10.5px;border-radius:5px;padding:2px 6px}
+.toc{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:12px 14px;margin-bottom:12px}
+.toc .t{font-size:11px;color:var(--dim);margin-bottom:8px}
+.toc a{display:flex;align-items:center;gap:8px;color:var(--text);text-decoration:none;font-size:13px;padding:7px 0;border-bottom:1px dashed rgba(34,48,74,.6)}
+.toc a:last-child{border-bottom:none}
+.toc a .no{flex:0 0 auto;width:22px;height:22px;border-radius:6px;background:rgba(59,130,246,.15);color:var(--blue2);font-size:11px;display:flex;align-items:center;justify-content:center}
+.foot{padding:16px 14px 30px;text-align:center;color:var(--dim);font-size:11px}
+.tip{background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.25);border-radius:10px;padding:10px 12px;font-size:12px;color:#a5eefb;line-height:1.7;margin-top:10px}
+.tip b{color:#67e8f9}
+.warn{background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.3);border-radius:10px;padding:10px 12px;font-size:12px;color:#fdba74;line-height:1.7;margin-top:10px}
+/* 图片预览 */
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:99;display:none;align-items:center;justify-content:center;padding:20px}
+.lightbox.show{display:flex}
+.lightbox img{max-width:100%;max-height:92vh;border-radius:8px}
+.lightbox .close{position:fixed;top:16px;right:20px;color:#fff;font-size:28px;cursor:pointer;z-index:100}
+</style>
+</head>
+<body>
+<div class="app-header">
+  <h1>购机通 · 供应商操作指南</h1>
+  <div class="sub">依据《购机通-进货》整理 · 持续更新</div>
+</div>
+<div class="app-main">
+
+  <div class="toc">
+    <div class="t">目录</div>
+    <a href="#s1"><span class="no">1</span>卖家上架（注册认证 / 铺商品 / 发货）</a>
+    <a href="#s2"><span class="no">2</span>门店进货（入驻 / 下单）</a>
+    <a href="#s3"><span class="no">3</span>注意事项</a>
+    <a href="#s4"><span class="no">4</span>高频疑问解答</a>
+  </div>
+
+  <div class="tip" style="margin-top:0"><b>背景</b>：随国补业务发展已积累约 6 万下沉门店，平台做供需两侧撮合桥梁，提供"商品 + 交易 + 钱包 + 对账 + 进销存"全流程解决方案。2026 年 1 月 8 日起【进货】已兼容到库存模块。</div>
+
+  <!-- ============ 1 卖家上架 ============ -->
+  <div id="s1" class="section-title"><span class="bar"></span><span class="sec-num">1</span>卖家上架</div>
+
+  <div class="card open">
+    <div class="c-head"><span>（一）先进行注册 + 认证</span><span class="arr">▶</span></div>
+    <div class="c-body">
+      <div class="step">
+        <div class="s-t"><span class="dot">1</span>登录（操作端：市场助手小程序）</div>
+        <div class="s-desc">扫描小程序二维码登录，或直接搜索"市场助手"小程序；点击【手机号快速验证】（务必保证微信是常用微信且该手机号为此微信绑定手机号）；【授权】手机号。</div>
+        <div class="s-img"><img src="supplier-img/img01.jpg" alt="扫码登录" onclick="openImg(this)"><div class="cap">① 扫描二维码登录</div></div>
+        <div class="s-img"><img src="supplier-img/img02.jpg" alt="手机号验证" onclick="openImg(this)"><div class="cap">② 点击【手机号快速验证】</div></div>
+        <div class="s-img"><img src="supplier-img/img03.jpg" alt="授权手机号" onclick="openImg(this)"><div class="cap">③ 【授权】手机号</div></div>
+      </div>
+      <div class="step">
+        <div class="s-t"><span class="dot">2</span>注册（企业 / 个体工商户 / 个人）</div>
+        <div class="s-desc">企业或个体工商户：点击【注册新主体】→ 选择【企业/个体工商户】（个人可选【个人】）→ 填写红框信息（公司名称、行业简称、主营品牌、主营地区）→ 勾选《注册即代表同意》→ 【确认注册】。<b>注意：如已有主体可直接选择对应主体。</b></div>
+        <div class="s-img"><img src="supplier-img/img04.jpg" alt="注册新主体" onclick="openImg(this)"><div class="cap">① 点击【注册新主体】</div></div>
+        <div class="s-img"><img src="supplier-img/img05.jpg" alt="选择主体类型" onclick="openImg(this)"><div class="cap">② 选择【企业/个体工商户】或【个人】</div></div>
+        <div class="s-img"><img src="supplier-img/img06.jpg" alt="填写注册信息" onclick="openImg(this)"><div class="cap">③ 填写红框信息 → 勾选同意 → 确认注册</div></div>
+      </div>
+      <div class="step">
+        <div class="s-t"><span class="dot">3</span>实名认证</div>
+        <div class="s-desc">点击【我的】-【去开通】→ 填写主体对应的【统一社会信用代码】【法人姓名】【法人身份证号】→ 【确认实名核验】。</div>
+        <div class="s-img"><img src="supplier-img/img07.jpg" alt="去开通" onclick="openImg(this)"><div class="cap">① 点击【我的】-【去开通】</div></div>
+        <div class="s-img"><img src="supplier-img/img08.jpg" alt="实名核验" onclick="openImg(this)"><div class="cap">② 填写信息 → 确认实名核验</div></div>
+      </div>
+      <div class="step">
+        <div class="s-t"><span class="dot">4</span>开通平安钱包</div>
+        <div class="s-desc" style="color:#fdba74"><b>企业级客户：</b>填写【账户名称】【银行账户】【开户银行】【银行联号】→ 【获取打款金额】→ 回填【小额到款金额】+【短信验证码】→ 【绑定】。</div>
+        <div class="s-img"><img src="supplier-img/img09.jpg" alt="企业开通钱包1" onclick="openImg(this)"><div class="cap">企业：① 填写账户信息</div></div>
+        <div class="s-img"><img src="supplier-img/img10.jpg" alt="企业开通钱包2" onclick="openImg(this)"><div class="cap">企业：② 回填打款金额 + 验证码</div></div>
+        <div class="s-img"><img src="supplier-img/img11.jpg" alt="绑定成功" onclick="openImg(this)"><div class="cap">③ 绑定成功</div></div>
+        <div class="s-desc" style="color:#fdba74;margin-top:10px"><b>个体工商户：</b>选择【个体工商户】，可选【个人银行卡（法人）】或【对公账户】，完善信息后点击【绑定】。</div>
+        <div class="s-img"><img src="supplier-img/img12.jpg" alt="个体户个人卡" onclick="openImg(this)"><div class="cap">个体户：① 个人银行卡（法人）</div></div>
+        <div class="s-img"><img src="supplier-img/img13.jpg" alt="个体户对公" onclick="openImg(this)"><div class="cap">个体户：② 对公账户</div></div>
+        <div class="s-img"><img src="supplier-img/img14.jpg" alt="绑定成功2" onclick="openImg(this)"><div class="cap">③ 绑定成功</div></div>
+        <div class="s-desc" style="color:#fdba74;margin-top:10px"><b>非企业级用户：</b>选择【个人】并录入红框信息注册 → 在【我的】点击【实名认证】完善信息 → 输入小额到款金额与手机号验证码开通平安账户。</div>
+        <div class="s-img"><img src="supplier-img/img15.jpg" alt="非企业注册" onclick="openImg(this)"><div class="cap">非企业：① 个人注册</div></div>
+        <div class="s-img"><img src="supplier-img/img16.jpg" alt="非企业实名" onclick="openImg(this)"><div class="cap">非企业：② 实名认证</div></div>
+        <div class="s-img"><img src="supplier-img/img17.jpg" alt="非企业开通" onclick="openImg(this)"><div class="cap">非企业：③ 小额到款开通平安账户</div></div>
+        <div class="tip"><b>恭喜完成登录和注册环节，快去发布商品～</b></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="c-head"><span>（二）铺商品</span><span class="arr">▶</span></div>
+    <div class="c-body">
+      <div class="step">
+        <div class="s-t"><span class="dot">1</span>手机端上架（随时随地上传商品）</div>
+        <div class="s-desc">点击底部【报价】→ 选择商品【发布商品】（可勾选"自由交易"或"醒市担保"）→ 填写价格 / 库存 / 包装 / 激活等信息 → 【确认发布】。发布后可在【我的货架】查看，注意<b>报价时效 2 天</b>，需及时更新报价。</div>
+        <div class="s-img"><img src="supplier-img/img18.jpg" alt="报价" onclick="openImg(this)"><div class="cap">① 点击【报价】</div></div>
+        <div class="s-img"><img src="supplier-img/img19.jpg" alt="发布商品" onclick="openImg(this)"><div class="cap">② 发布商品</div></div>
+        <div class="s-img"><img src="supplier-img/img20.jpg" alt="我的货架" onclick="openImg(this)"><div class="cap">③ 查看商品（我的货架）</div></div>
+      </div>
+      <div class="step">
+        <div class="s-t"><span class="dot">2</span>PC 端批量上架（省时省力）</div>
+        <div class="s-desc">登录网址：<b>https://market.xingshiapp.cn/profile/shelves/publish</b>（建议使用谷歌浏览器）→ 选择对应上架主体登录 → 选择【醒市担保】→ 点击【下载模板】（按 excel 的 sheet2 选择商品和 SKU 名称，录入到 sheet1，维护好价格 / 库存 / 标签）→ 点击【导入商品】【上传 excel】（单次上限 300 条）。</div>
+        <div class="s-img"><img src="supplier-img/img21.jpg" alt="PC端醒市担保" onclick="openImg(this)"><div class="cap">① 选择【醒市担保】- 下载模板</div></div>
+        <div class="s-img"><img src="supplier-img/img22.jpg" alt="下载模板" onclick="openImg(this)"><div class="cap">② 点击下载模板，按 sheet2 选品录入 sheet1</div></div>
+        <div class="s-img"><img src="supplier-img/img23.jpg" alt="批量导入" onclick="openImg(this)"><div class="cap">③ 上传 excel（单次上限 300 条）</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="c-head"><span>（三）卖家发货</span><span class="arr">▶</span></div>
+    <div class="c-body">
+      <div class="step">
+        <div class="s-t"><span class="dot">1</span>外部商发货（操作端：市场助手）</div>
+        <div class="s-desc">在【我出售的】找到待发货订单 → 点击【发货】→ 选择【配送方式】（快递发货 + 快递单号 / 快递公司）+ 录入【串码信息】→ 【确认发货】。</div>
+        <div class="s-img"><img src="supplier-img/img24.jpg" alt="发货" onclick="openImg(this)"><div class="cap">① 点击【发货】</div></div>
+        <div class="s-img"><img src="supplier-img/img25.jpg" alt="发货信息" onclick="openImg(this)"><div class="cap">② 选择发货方式 + 串码</div></div>
+        <div class="s-img"><img src="supplier-img/img26.jpg" alt="确认发货" onclick="openImg(this)"><div class="cap">③ 确认发货</div></div>
+      </div>
+      <div class="step">
+        <div class="s-t"><span class="dot">2</span>能良系发货</div>
+        <div class="s-desc"><b>订单推送聚水潭，请到聚水潭发货。</b></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 2 门店进货 ============ -->
+  <div id="s2" class="section-title"><span class="bar"></span><span class="sec-num">2</span>门店进货</div>
+
+  <div class="card open">
+    <div class="c-head"><span>（一）门店入驻购机通</span><span class="arr">▶</span></div>
+    <div class="c-body">
+      <div class="step">
+        <div class="s-t"><span class="dot">1</span>入驻流程</div>
+        <div class="s-desc">扫 BD 码 → 点【新注册】（未注册门店点【注册新主体】）→ 填写【企业信息】（企业 / 个体工商户 / 小微商户(个人)；法人身份证号个体工商户必填）→ 录入【门店信息】（门店名称、所属行业、主营品牌、门店地址、门店电话，可上传门头照片）→ 勾选协议 → 【提交审核】→ 等待审核完成即可外展。</div>
+        <div class="s-img"><img src="supplier-img/img27.jpg" alt="门店注册" onclick="openImg(this)"><div class="cap">① 扫 BD 码 → 点新注册</div></div>
+        <div class="s-img"><img src="supplier-img/img28.jpg" alt="企业信息" onclick="openImg(this)"><div class="cap">② 填写企业信息</div></div>
+        <div class="s-img"><img src="supplier-img/img29.jpg" alt="门店信息" onclick="openImg(this)"><div class="cap">③ 录入门店信息 → 提交审核</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card open">
+    <div class="c-head"><span>（二）下单进货</span><span class="arr">▶</span></div>
+    <div class="c-body">
+      <div class="step">
+        <div class="s-t"><span class="dot">1</span>选品</div>
+        <div class="s-desc">在【购机通】新增一级菜单"进货"（限 B 端门店可见）：左上角【省份】+ 搜索栏 + 分类 tab；商品按"省份 + 分类"展示；点击【筛选】可唤出筛选侧边栏（不同分类对应不同筛选项）。<br><b>地址逻辑：</b>左上角地址取门店所在城市 → 该城市无商品则取全省报价 → 全省无报价则取全国。</div>
+        <div class="s-img"><img src="supplier-img/img30.jpg" alt="选品" onclick="openImg(this)"><div class="cap">① 进货页选品（省份 + 分类 + 筛选）</div></div>
+      </div>
+      <div class="step">
+        <div class="s-t"><span class="dot">2</span>下单</div>
+        <div class="s-desc">点击【去下单】→ 选收货地址 → 使用<b>平安账户钱包支付</b>（暂不支持微信、支付宝、云闪付）→ 生成订单；若卖家未录入串码，买家可在确认收货时【上传串码】；配送方式可根据卖家设置。</div>
+        <div class="s-img"><img src="supplier-img/img31.jpg" alt="去下单" onclick="openImg(this)"><div class="cap">① 点击【去下单】</div></div>
+        <div class="s-img"><img src="supplier-img/img32.jpg" alt="钱包支付" onclick="openImg(this)"><div class="cap">② 选地址 + 钱包支付</div></div>
+        <div class="s-img"><img src="supplier-img/img33.jpg" alt="订单详情" onclick="openImg(this)"><div class="cap">③ 订单详情 / 上传串码 / 完成</div></div>
+      </div>
+      <div class="step">
+        <div class="s-t"><span class="dot">3</span>在库存页面下【进货】订单</div>
+        <div class="s-desc">详见《如何在【库存】模块下进货订单》。<b>注意：</b>目前在市场助手上架的商品，有些情况下不在【库存】页面展示，需要注意！</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 3 注意事项 ============ -->
+  <div id="s3" class="section-title"><span class="bar"></span><span class="sec-num">3</span>注意事项</div>
+  <div class="card" style="padding:14px">
+    <ol class="note-list">
+      <li>自进货兼容到库存后（2026 年 1 月 8 日），省分公司主体在市场助手上架的订单，通过购机通【库存】页面下单的，在聚水潭会自动创建订单，无需手动创建。</li>
+      <li>外部商在市场助手上架的，无需推送到聚水潭。</li>
+      <li>发票走线下。</li>
+      <li>不支持个人买家下单；本期不支付分店使用总店余额进行下单。</li>
+      <li>服务费点位：本期卖家收取千分之 2（千2），买家不收服务费。</li>
+    </ol>
+  </div>
+
+  <!-- ============ 4 高频疑问 ============ -->
+  <div id="s4" class="section-title"><span class="bar"></span><span class="sec-num">4</span>高频疑问解答</div>
+  <div class="qa-item">
+    <div class="q"><span class="tag">问</span>如何避免供应商乱报价、不履约的情况发生？</div>
+    <div class="a"><span class="tag2">答</span>&nbsp;后期版本会上线供应商管控机制（如保证金）。</div>
+  </div>
+  <div class="qa-item">
+    <div class="q"><span class="tag">问</span>通过购机通走市场分销采货，费用是按照市场分销的费用吗？</div>
+    <div class="a"><span class="tag2">答</span>&nbsp;千 2 平台技术服务费，收卖方。</div>
+  </div>
+  <div class="qa-item">
+    <div class="q"><span class="tag">问</span>卖家信息不保密，厂商发现后有处罚风险？</div>
+    <div class="a"><span class="tag2">答</span>&nbsp;请遵守平台规则合规经营。</div>
+  </div>
+
+  <div class="foot">数据来源：飞书《购机通-进货》文档 · 仅供内部供应商使用</div>
+</div>
+
+<!-- 图片预览 -->
+<div class="lightbox" id="lb" onclick="closeImg()">
+  <span class="close">✕</span>
+  <img id="lbImg" src="" alt="">
+</div>
+
+<script>
+// 折叠卡片
+document.querySelectorAll('.c-head').forEach(function(h){
+  h.addEventListener('click',function(){ this.parentElement.classList.toggle('open'); });
+});
+// 图片放大
+function openImg(img){ var lb=document.getElementById('lb'); document.getElementById('lbImg').src=img.src; lb.classList.add('show'); }
+function closeImg(){ document.getElementById('lb').classList.remove('show'); }
+document.addEventListener('keydown',function(e){ if(e.key==='Escape')closeImg(); });
+</script>
+</body>
+</html>
