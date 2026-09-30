@@ -14,25 +14,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 .nav::-webkit-scrollbar{display:none}
 .nav a{flex:0 0 auto;padding:6px 14px;border-radius:20px;background:#172236;color:#b9c8dd;font-size:12px;text-decoration:none}
 .nav a.on{background:#2f6fed;color:#fff;font-weight:600}
-.section{padding:16px;scroll-margin-top:120px}
-.card{background:#101c30;border-radius:14px;padding:16px;margin-bottom:14px;border:1px solid rgba(255,255,255,.05)}
-.card h2{font-size:15px;color:#fff;margin-bottom:10px;display:flex;align-items:center;gap:8px}
-.card h2 .no{background:#2f6fed;color:#fff;width:22px;height:22px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex:0 0 auto}
-.card h3{font-size:13px;color:#7fb0ff;margin:14px 0 8px}
-.card p{font-size:13px;line-height:1.75;color:#c6d2e4}
+.section{padding:12px;scroll-margin-top:120px}
+.card{background:#101c30;border-radius:12px;padding:12px 14px;margin-bottom:11px;border:1px solid rgba(255,255,255,.05)}
+.card h2{font-size:14px;color:#fff;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.card h2 .no{background:#2f6fed;color:#fff;width:20px;height:20px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;flex:0 0 auto}
+.card h3{font-size:12.5px;color:#7fb0ff;margin:10px 0 6px}
+.card p{font-size:12.5px;line-height:1.6;color:#c6d2e4}
 .card .hl{color:#ffb454;font-weight:600}
-.card .warn{background:rgba(255,180,84,.08);border-left:3px solid #ffb454;padding:8px 10px;border-radius:6px;font-size:12px;color:#ffd9a0;margin-top:10px}
-.card .tip{background:rgba(47,111,237,.08);border-left:3px solid #2f6fed;padding:8px 10px;border-radius:6px;font-size:12px;color:#a9c6f5;margin-top:10px}
-.step{display:flex;gap:12px;margin-bottom:14px;position:relative}
+.card .warn{background:rgba(255,180,84,.08);border-left:3px solid #ffb454;padding:7px 9px;border-radius:6px;font-size:11.5px;color:#ffd9a0;margin-top:8px}
+.card .tip{background:rgba(47,111,237,.08);border-left:3px solid #2f6fed;padding:7px 9px;border-radius:6px;font-size:11.5px;color:#a9c6f5;margin-top:8px}
+.step{display:flex;gap:10px;margin-bottom:10px;position:relative}
 .step:last-child{margin-bottom:0}
-.step .dot{flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:#2f6fed;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:700;margin-top:2px}
-.step .body{flex:1}
-.step .body .t{font-size:13px;color:#eef3fb;font-weight:600;margin-bottom:4px}
-.step .body .d{font-size:12px;color:#aab8cd;line-height:1.6}
+.step .dot{flex:0 0 auto;width:20px;height:20px;border-radius:50%;background:#2f6fed;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:700;margin-top:1px}
+.step .body{flex:1;min-width:0}
+.step .body .t{font-size:12.5px;color:#eef3fb;font-weight:600;margin-bottom:2px}
+.step .body .d{font-size:11.5px;color:#aab8cd;line-height:1.55}
 .step .body .d b{color:#ffb454}
-.pics{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-top:10px}
-.pics img{width:100%;border-radius:8px;border:1px solid rgba(255,255,255,.08);display:block;cursor:pointer;background:#0b1220}
-.pics .cap{font-size:11px;color:#8fa3bf;margin-top:4px;text-align:center}
+.pics{display:flex;overflow-x:auto;gap:9px;margin-top:7px;padding:2px 0 8px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.pics::-webkit-scrollbar{display:none}
+.pics .pic{flex:0 0 auto;width:44%;max-width:190px;scroll-snap-align:start}
+.pics img{width:100%;height:132px;object-fit:contain;border-radius:8px;border:1px solid rgba(255,255,255,.08);display:block;cursor:pointer;background:#0b1220}
+.pics .cap{font-size:10.5px;color:#8fa3bf;margin-top:3px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .video-box{margin-bottom:14px}
 .video-box video{width:100%;border-radius:12px;background:#000;max-height:420px}
 .video-box .vt{font-size:13px;color:#fff;font-weight:600;margin:6px 2px}
@@ -104,17 +106,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
     <p>关键步骤：<span class="hl">【购机通门店入驻】+【开通门店现货服务】+【完成绑卡】</span></p>
     <div style="height:10px"></div>
     <div class="step"><div class="dot">1</div><div class="body"><div class="t">入驻【购机通】</div><div class="d"><b>务必选择企业进行入驻</b>，并完成门店审核（主体须企业级 + 一般纳税人资质）</div></div></div>
-    <div class="pics"><img src="supplier-img3/md01.png" onclick="lb(this,'入驻购机通：主体信息填写界面')"><div class="cap">① 入驻购机通（选企业/个体工商户）</div></div>
+    <div class="pics"><div class="pic"><img src="supplier-img3/md01.png" onclick="lb(this,'入驻购机通：主体信息填写界面')"><div class="cap">① 入驻购机通（选企业/个体工商户）</div></div></div>
     <div class="step"><div class="dot">2</div><div class="body"><div class="t">审核通过，点击【去开通】</div><div class="d">位置：<b>我的 → 现货出售 → 去开通</b></div></div></div>
-    <div class="pics"><img src="supplier-img3/md02.png" onclick="lb(this,'我的页面：现货出售·去开通')"><div class="cap">② 现货出售 → 去开通</div></div>
+    <div class="pics"><div class="pic"><img src="supplier-img3/md02.png" onclick="lb(this,'我的页面：现货出售·去开通')"><div class="cap">② 现货出售 → 去开通</div></div></div>
     <div class="step"><div class="dot">3</div><div class="body"><div class="t">点击【立即开通】</div><div class="d">模式介绍：<b>顾客购买 → 门店自有商品出货 → 生成供货结算单 → 上传发票 → 平台商家结算回款 → 签署电子采购合同</b></div></div></div>
-    <div class="pics"><img src="supplier-img3/md03.png" onclick="lb(this,'门店现货出售·模式介绍与立即开通')"><div class="cap">③ 立即开通（模式介绍）</div></div>
+    <div class="pics"><div class="pic"><img src="supplier-img3/md03.png" onclick="lb(this,'门店现货出售·模式介绍与立即开通')"><div class="cap">③ 立即开通（模式介绍）</div></div></div>
     <div class="step"><div class="dot">4</div><div class="body"><div class="t">开通钱包</div><div class="d">填写<b>银行账户、银行卡号、开户银行、银行联号</b>等信息</div></div></div>
-    <div class="pics"><img src="supplier-img3/md04.png" onclick="lb(this,'开通钱包：绑定银行卡')"><div class="cap">④ 开通钱包（绑卡）</div></div>
+    <div class="pics"><div class="pic"><img src="supplier-img3/md04.png" onclick="lb(this,'开通钱包：绑定银行卡')"><div class="cap">④ 开通钱包（绑卡）</div></div></div>
     <div class="step"><div class="dot">5</div><div class="body"><div class="t">小额打款 + 验证码验证</div><div class="d">向银行卡打一笔 0~0.5 元小额款项，回填<b>小额到账金额 + 短信验证码</b>，完成后点击【绑定】</div></div></div>
-    <div class="pics"><img src="supplier-img3/md05.png" onclick="lb(this,'小额打款+验证码验证')"><div class="cap">⑤ 小额打款 + 验证码 → 绑定</div></div>
+    <div class="pics"><div class="pic"><img src="supplier-img3/md05.png" onclick="lb(this,'小额打款+验证码验证')"><div class="cap">⑤ 小额打款 + 验证码 → 绑定</div></div></div>
     <div class="step"><div class="dot">6</div><div class="body"><div class="t">开通完成</div><div class="d">可自主发布现货商品【去发布】，或暂不发布、产生订单后用现货商品出货给顾客；底部有<b>待出售 / 待开票 / 待结算 / 合同签署</b>四个选项卡</div></div></div>
-    <div class="pics"><img src="supplier-img3/md06.png" onclick="lb(this,'开通完成：可自主发布现货商品')"><div class="cap">⑥ 开通完成</div></div>
+    <div class="pics"><div class="pic"><img src="supplier-img3/md06.png" onclick="lb(this,'开通完成：可自主发布现货商品')"><div class="cap">⑥ 开通完成</div></div></div>
     <div class="tip">老客户：仅需开通门店现货服务即可，无需重复入驻。</div>
   </div>
 </div>
@@ -126,18 +128,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
     <p>门店盘点店内货品，进行商品上架。关键要点：<span class="hl">【选品】+【维护零售价】+【配送方式】</span></p>
     <div style="height:10px"></div>
     <div class="step"><div class="dot">1</div><div class="body"><div class="t">点击【立即发布】</div></div></div>
-    <div class="pics"><img src="supplier-img3/md07.png" onclick="lb(this,'门店现货商品·立即发布')"><div class="cap">① 立即发布</div></div>
+    <div class="pics"><div class="pic"><img src="supplier-img3/md07.png" onclick="lb(this,'门店现货商品·立即发布')"><div class="cap">① 立即发布</div></div></div>
     <div class="step"><div class="dot">2</div><div class="body"><div class="t">选择需发布的商品</div></div></div>
-    <div class="pics"><img src="supplier-img3/md08.png" onclick="lb(this,'选择需发布的商品')"><div class="cap">② 选择商品</div></div>
+    <div class="pics"><div class="pic"><img src="supplier-img3/md08.png" onclick="lb(this,'选择需发布的商品')"><div class="cap">② 选择商品</div></div></div>
     <div class="step"><div class="dot">3</div><div class="body"><div class="t">录入价格 + 库存 + 配送方式</div><div class="d">可开启<b>参与本地国补</b>开关；配送方式<b>至少支持一种</b>：到店自提 / 快递发货；<b>售后：若门店商品订单产生售后，由门店自行承担</b></div></div></div>
     <div class="pics">
-      <img src="supplier-img3/md09.png" onclick="lb(this,'录入价格+库存（示例vivo X200s）')"><div class="cap">③ 价格 + 库存</div>
-      <img src="supplier-img3/md10.png" onclick="lb(this,'配送方式：到店自提/快递发货')"><div class="cap">③ 配送方式</div>
+      <div class="pic"><img src="supplier-img3/md09.png" onclick="lb(this,'录入价格+库存（示例vivo X200s）')"><div class="cap">③ 价格 + 库存</div></div>
+      <div class="pic"><img src="supplier-img3/md10.png" onclick="lb(this,'配送方式：到店自提/快递发货')"><div class="cap">③ 配送方式</div></div>
     </div>
     <div class="step"><div class="dot">4</div><div class="body"><div class="t">发布成功</div><div class="d">可直接<b>分享二维码</b>给消费者进行转化下单</div></div></div>
-    <div class="pics"><img src="supplier-img3/md11.png" onclick="lb(this,'发布成功：分享二维码给消费者')"><div class="cap">④ 发布成功 · 扫码下单</div></div>
+    <div class="pics"><div class="pic"><img src="supplier-img3/md11.png" onclick="lb(this,'发布成功：分享二维码给消费者')"><div class="cap">④ 发布成功 · 扫码下单</div></div></div>
     <div class="step"><div class="dot">5</div><div class="body"><div class="t">前台页面已有外展</div><div class="d">消费者也可在<b>前台搜索下单</b>（含"大牌好货/正品保证"标签，48小时内发货）</div></div></div>
-    <div class="pics"><img src="supplier-img3/md12.png" onclick="lb(this,'前展页面：消费者可见')"><div class="cap">⑤ 前台外展</div></div>
+    <div class="pics"><div class="pic"><img src="supplier-img3/md12.png" onclick="lb(this,'前展页面：消费者可见')"><div class="cap">⑤ 前台外展</div></div></div>
     <div class="warn"><b>录入价格规则：</b>门店只需维护【零售价】；平台服务费 = 零售价 × 5%（点位以省分规定来定）。</div>
     <div class="warn"><b>售后兜底：</b>当成交货源为门店时，售后方为门店。</div>
   </div>
@@ -150,15 +152,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
     <p>此处可直接发给门店，用于引导消费者下单。</p>
     <div style="height:10px"></div>
     <div class="step"><div class="dot">1</div><div class="body"><div class="t">扫码进入门店进行选品</div><div class="d">页面展示<b>国家补贴</b>标识与国补后预估价格</div></div></div>
-    <div class="pics"><img src="supplier-img3/md13.png" onclick="lb(this,'扫码进入门店选品')"><div class="cap">① 扫码选品</div></div>
+    <div class="pics"><div class="pic"><img src="supplier-img3/md13.png" onclick="lb(this,'扫码进入门店选品')"><div class="cap">① 扫码选品</div></div></div>
     <div class="step"><div class="dot">2</div><div class="body"><div class="t">进行实名认证 + 提交订单</div><div class="d">确认收货地址与购物清单，<b>48小时内发货</b>提示</div></div></div>
-    <div class="pics"><img src="supplier-img3/md14.png" onclick="lb(this,'实名认证+提交订单')"><div class="cap">② 实名认证 + 提交订单</div></div>
+    <div class="pics"><div class="pic"><img src="supplier-img3/md14.png" onclick="lb(this,'实名认证+提交订单')"><div class="cap">② 实名认证 + 提交订单</div></div></div>
     <div class="step"><div class="dot">3</div><div class="body"><div class="t">选云闪付进行付款</div><div class="d">支付方式选择<b>云闪付（享政府补贴）</b></div></div></div>
-    <div class="pics"><img src="supplier-img3/md15.png" onclick="lb(this,'选云闪付付款（享政府补贴）')"><div class="cap">③ 云闪付付款</div></div>
+    <div class="pics"><div class="pic"><img src="supplier-img3/md15.png" onclick="lb(this,'选云闪付付款（享政府补贴）')"><div class="cap">③ 云闪付付款</div></div></div>
     <div class="step"><div class="dot">4</div><div class="body"><div class="t">支付</div><div class="d">支付成功，显示国补后实付金额（如 原价9元 → 实付8.98元）</div></div></div>
-    <div class="pics"><img src="supplier-img3/md16.png" onclick="lb(this,'支付成功')"><div class="cap">④ 支付成功</div></div>
+    <div class="pics"><div class="pic"><img src="supplier-img3/md16.png" onclick="lb(this,'支付成功')"><div class="cap">④ 支付成功</div></div></div>
     <div class="step"><div class="dot">5</div><div class="body"><div class="t">下单完成</div><div class="d">订单详情可见；<b>有退款场景可再次进行申请</b></div></div></div>
-    <div class="pics"><img src="supplier-img3/md17.png" onclick="lb(this,'下单完成·可申请退款')"><div class="cap">⑤ 下单完成</div></div>
+    <div class="pics"><div class="pic"><img src="supplier-img3/md17.png" onclick="lb(this,'下单完成·可申请退款')"><div class="cap">⑤ 下单完成</div></div></div>
   </div>
 </div>
 
@@ -168,13 +170,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
     <h2><span class="no">4</span>门店发货 · 快递发货场景</h2>
     <div style="height:10px"></div>
     <div class="step"><div class="dot">1</div><div class="body"><div class="t">在我的订单中点击【立即发货】</div><div class="d">位置：<b>我的订单 → 待发货 → 立即发货</b></div></div></div>
-    <div class="pics"><img src="supplier-img3/md18.png" onclick="lb(this,'我的订单·待发货·立即发货')"><div class="cap">① 立即发货</div></div>
+    <div class="pics"><div class="pic"><img src="supplier-img3/md18.png" onclick="lb(this,'我的订单·待发货·立即发货')"><div class="cap">① 立即发货</div></div></div>
     <div class="step"><div class="dot">2</div><div class="body"><div class="t">上传商品信息：69 + SN + IMEI1/2 码</div><div class="d"><b>SN占用成功后</b>才可预约顺丰</div></div></div>
-    <div class="pics"><img src="supplier-img3/md19.png" onclick="lb(this,'提交SN码：69+SN+IMEI1/2')"><div class="cap">② 上传商品信息</div></div>
+    <div class="pics"><div class="pic"><img src="supplier-img3/md19.png" onclick="lb(this,'提交SN码：69+SN+IMEI1/2')"><div class="cap">② 上传商品信息</div></div></div>
     <div class="step"><div class="dot">3</div><div class="body"><div class="t">预约顺丰，点击【确认发货】</div><div class="d">选择寄件地址，预约成功后<b>确认发货</b></div></div></div>
-    <div class="pics"><img src="supplier-img3/md20.png" onclick="lb(this,'预约顺丰·确认发货')"><div class="cap">③ 预约顺丰 → 确认发货</div></div>
+    <div class="pics"><div class="pic"><img src="supplier-img3/md20.png" onclick="lb(this,'预约顺丰·确认发货')"><div class="cap">③ 预约顺丰 → 确认发货</div></div></div>
     <div class="step"><div class="dot">4</div><div class="body"><div class="t">发货成功</div><div class="d">显示<b>已发货</b>状态，可查看详情</div></div></div>
-    <div class="pics"><img src="supplier-img3/md21.png" onclick="lb(this,'发货成功')"><div class="cap">④ 发货成功</div></div>
+    <div class="pics"><div class="pic"><img src="supplier-img3/md21.png" onclick="lb(this,'发货成功')"><div class="cap">④ 发货成功</div></div></div>
   </div>
 </div>
 
@@ -183,7 +185,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
   <div class="card">
     <h2><span class="no">5</span>货款结算 · 每个商品能赚多少</h2>
     <p><span class="hl">发布时即可知晓每单收入。</span>示例：OPPO Reno13 零售价 2699 元 → 国补价 2294.15 元 → 门店预计收入 2564 元 → 平台服务费 135 元。</p>
-    <div class="pics"><img src="supplier-img3/md22.png" onclick="lb(this,'发布时即可知晓每单收入')"><div class="cap">发布时收入预览</div></div>
+    <div class="pics"><div class="pic"><img src="supplier-img3/md22.png" onclick="lb(this,'发布时即可知晓每单收入')"><div class="cap">发布时收入预览</div></div></div>
     <div class="warn"><b>规则：</b>门店录入零售价即可，平台服务费按<b>零售价 × 5%</b>逻辑自动算出；押金（可退）= 国补订单质押<b>国补款 × 10%</b>，待国补回款后退还。</div>
   </div>
   <div class="card">
@@ -191,40 +193,40 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
     <p>遵循<b>先票后款</b>规则：门店向平台开票，上传成功后才可拿到收入。位置：<span class="hl">【我的】→【现货出售】→【待开票】→ 找到对应商品【上传发票】</span></p>
     <div style="height:10px"></div>
     <div class="pics">
-      <img src="supplier-img3/md23.png" onclick="lb(this,'我的页面·待开票入口')"><div class="cap">待开票入口</div>
-      <img src="supplier-img3/md24.png" onclick="lb(this,'待开票列表')"><div class="cap">待开票列表</div>
-      <img src="supplier-img3/md25.png" onclick="lb(this,'上传发票界面')"><div class="cap">上传发票</div>
-      <img src="supplier-img3/md26.png" onclick="lb(this,'上传发票成功')"><div class="cap">上传成功</div>
+      <div class="pic"><img src="supplier-img3/md23.png" onclick="lb(this,'我的页面·待开票入口')"><div class="cap">待开票入口</div></div>
+      <div class="pic"><img src="supplier-img3/md24.png" onclick="lb(this,'待开票列表')"><div class="cap">待开票列表</div></div>
+      <div class="pic"><img src="supplier-img3/md25.png" onclick="lb(this,'上传发票界面')"><div class="cap">上传发票</div></div>
+      <div class="pic"><img src="supplier-img3/md26.png" onclick="lb(this,'上传发票成功')"><div class="cap">上传成功</div></div>
     </div>
     <p style="margin-top:10px">门店也可操作<b>批量开具发票</b>：勾选需批量开具的订单 → 开票后点击【上传发票】。</p>
     <div class="pics">
-      <img src="supplier-img3/md27.png" onclick="lb(this,'批量开票：勾选订单')"><div class="cap">批量开票</div>
-      <img src="supplier-img3/md28.png" onclick="lb(this,'上传发票弹窗·相机图标')"><div class="cap">点击上传发票</div>
+      <div class="pic"><img src="supplier-img3/md27.png" onclick="lb(this,'批量开票：勾选订单')"><div class="cap">批量开票</div></div>
+      <div class="pic"><img src="supplier-img3/md28.png" onclick="lb(this,'上传发票弹窗·相机图标')"><div class="cap">点击上传发票</div></div>
     </div>
     <div class="tip"><b>注：</b>开票金额为实际货款，<b>包含押金金额</b>。</div>
     <p style="margin-top:10px">已开票预览：门店可在<b>已开票</b>内查看已开票订单详情，点击【查看发票】可查询到发票。</p>
     <div class="pics">
-      <img src="supplier-img3/md29.png" onclick="lb(this,'已开票列表')"><div class="cap">已开票</div>
-      <img src="supplier-img3/md30.png" onclick="lb(this,'查看发票')"><div class="cap">查看发票</div>
+      <div class="pic"><img src="supplier-img3/md29.png" onclick="lb(this,'已开票列表')"><div class="cap">已开票</div></div>
+      <div class="pic"><img src="supplier-img3/md30.png" onclick="lb(this,'查看发票')"><div class="cap">查看发票</div></div>
     </div>
   </div>
   <div class="card">
     <h2><span class="no">7</span>卖了货怎么提现 · 步骤2：签约PO协议</h2>
     <p><span class="hl">【先认证】</span>需先进行<b>法大大认证</b>——此为可以盖电子章的前提条件。</p>
     <div class="pics">
-      <img src="supplier-img3/md31.png" onclick="lb(this,'现货出售入口')"><div class="cap">现货出售</div>
-      <img src="supplier-img3/md32.png" onclick="lb(this,'实名认证界面')"><div class="cap">实名认证</div>
-      <img src="supplier-img3/md33.png" onclick="lb(this,'前往认证·互联网公证签')"><div class="cap">前往认证</div>
-      <img src="supplier-img3/md34.png" onclick="lb(this,'多合一营业执照·法人身份认证')"><div class="cap">多合一营业执照</div>
-      <img src="supplier-img3/md35.png" onclick="lb(this,'认证成功')"><div class="cap">认证成功</div>
+      <div class="pic"><img src="supplier-img3/md31.png" onclick="lb(this,'现货出售入口')"><div class="cap">现货出售</div></div>
+      <div class="pic"><img src="supplier-img3/md32.png" onclick="lb(this,'实名认证界面')"><div class="cap">实名认证</div></div>
+      <div class="pic"><img src="supplier-img3/md33.png" onclick="lb(this,'前往认证·互联网公证签')"><div class="cap">前往认证</div></div>
+      <div class="pic"><img src="supplier-img3/md34.png" onclick="lb(this,'多合一营业执照·法人身份认证')"><div class="cap">多合一营业执照</div></div>
+      <div class="pic"><img src="supplier-img3/md35.png" onclick="lb(this,'认证成功')"><div class="cap">认证成功</div></div>
     </div>
     <p style="margin-top:10px"><span class="hl">【签协议】</span>法大大认证成功，签署<b>框架合同</b>（无仓平台采购框架合同）。</p>
     <div class="pics">
-      <img src="supplier-img3/md36.png" onclick="lb(this,'待签署协议列表')"><div class="cap">待签署协议</div>
-      <img src="supplier-img3/md37.png" onclick="lb(this,'签署文件·无仓平台采购框架合同')"><div class="cap">签署文件</div>
-      <img src="supplier-img3/md38.png" onclick="lb(this,'盖电子章')"><div class="cap">盖电子章</div>
-      <img src="supplier-img3/md39.png" onclick="lb(this,'输入验证码')"><div class="cap">验证码</div>
-      <img src="supplier-img3/md40.png" onclick="lb(this,'已签署')"><div class="cap">已签署</div>
+      <div class="pic"><img src="supplier-img3/md36.png" onclick="lb(this,'待签署协议列表')"><div class="cap">待签署协议</div></div>
+      <div class="pic"><img src="supplier-img3/md37.png" onclick="lb(this,'签署文件·无仓平台采购框架合同')"><div class="cap">签署文件</div></div>
+      <div class="pic"><img src="supplier-img3/md38.png" onclick="lb(this,'盖电子章')"><div class="cap">盖电子章</div></div>
+      <div class="pic"><img src="supplier-img3/md39.png" onclick="lb(this,'输入验证码')"><div class="cap">验证码</div></div>
+      <div class="pic"><img src="supplier-img3/md40.png" onclick="lb(this,'已签署')"><div class="cap">已签署</div></div>
     </div>
   </div>
   <div class="card">
