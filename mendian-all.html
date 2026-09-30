@@ -578,7 +578,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 
 <button class="editfab" id="editFab" onclick="toggleEdit()">✏️</button>
 <div class="editpanel" id="editPanel">
-  <div class="ept">✏️ 编辑模式：直接点击任意文字修改，改完记得保存</div>
+  <div class="ept">✏️ 编辑模式：直接点击任意文字修改，底部已预留空间不会被面板挡住</div>
   <button class="s" onclick="saveEdits()">💾 保存修改（本机浏览器）</button>
   <button class="e" onclick="exportHtml()">📤 导出HTML文件（发我即可更新公网）</button>
   <button class="c" onclick="toggleEdit()">✔️ 完成编辑</button>
@@ -587,7 +587,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 <script>
 var EDIT_KEY='gjt_edits_v3';
 function restoreEdits(){
-  try{var s=localStorage.getItem(EDIT_KEY);if(s){document.getElementById('root').innerHTML=s;}}catch(e){}
+  var s='';
+  try{s=localStorage.getItem(EDIT_KEY)||localStorage.getItem('gjt_edits_v2')||'';}catch(e){}
+  if(s){document.getElementById('root').innerHTML=s;}
   var els=document.getElementById('root').querySelectorAll('[contenteditable]');
   for(var i=0;i<els.length;i++){els[i].removeAttribute('contenteditable')}
 }
@@ -604,9 +606,10 @@ function setEdit(on){
 function toggleEdit(){
   editOn=!editOn; setEdit(editOn);
   document.getElementById('editPanel').style.display=editOn?'flex':'none';
+  document.body.style.paddingBottom=editOn?'230px':'70px';
   document.getElementById('editFab').textContent=editOn?'✔️':'✏️';
   document.getElementById('editFab').style.background=editOn?'#1b8a5a':'linear-gradient(135deg,#e08a2e,#ffb454)';
-  if(!editOn){alert('已退出编辑模式。修改会自动保留（需点过"保存修改"才会存到本机）。')}
+  if(!editOn){alert('已退出编辑模式。若需保留修改，请点过"保存修改"。')}
 }
 function saveEdits(){
   try{localStorage.setItem(EDIT_KEY,document.getElementById('root').innerHTML);alert('✅ 已保存到本机浏览器。刷新页面后修改仍在（同一浏览器）。')}catch(e){alert('保存失败：'+e.message)}
