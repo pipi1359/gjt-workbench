@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>购机通 · 供应商全流程工作台</title>
+<style>
+:root{--bg:#0b1220;--bg2:#111a2e;--card:#141e33;--line:rgba(40,56,90,.55);--text:#e6edf7;--sub:#9db1cf;--dim:#6b7f9e;--blue:#3b82f6;--blue2:#9ecbff;--green:#22c55e;--orange:#f97316;--purple:#a78bfa;--cyan:#22d3ee;--red:#ef4444}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.app-header{position:sticky;top:0;z-index:20;background:linear-gradient(135deg,#0e1830 0%,#0b1220 100%);border-bottom:1px solid var(--line);padding:14px 16px calc(14px + env(safe-area-inset-top));backdrop-filter:blur(8px)}
+.app-header h1{font-size:17px;font-weight:700;letter-spacing:.5px}
+.app-header .sub{font-size:11px;color:var(--sub);margin-top:3px}
+.app-main{max-width:680px;margin:0 auto;padding:14px 14px calc(30px + env(safe-area-inset-bottom))}
+/* 生命周期速览 */
+.life-nav{display:flex;gap:6px;overflow-x:auto;padding:10px 0 4px;margin-bottom:4px;-webkit-overflow-scrolling:touch}
+.life-nav::-webkit-scrollbar{display:none}
+.life-item{flex:0 0 auto;display:flex;align-items:center;gap:5px;padding:7px 10px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-size:11px;color:var(--sub);white-space:nowrap}
+.life-item .n{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;border-radius:50%;background:rgba(59,130,246,.18);color:var(--blue2);font-size:10px;font-weight:700}
+.life-item.on{background:rgba(59,130,246,.14);border-color:rgba(59,130,246,.5);color:var(--blue2)}
+.section-title{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;margin:18px 2px 10px}
+.section-title .bar{width:4px;height:16px;border-radius:2px;background:var(--blue);flex:0 0 auto}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;border-radius:6px;background:rgba(59,130,246,.15);color:var(--blue2);font-size:12px;font-weight:700;padding:0 6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:13px;overflow:hidden;margin-bottom:10px}
+.card .c-head{display:flex;align-items:center;gap:8px;padding:12px 14px;font-size:13.5px;font-weight:700;border-bottom:1px solid var(--line);cursor:pointer}
+.card .c-head .arr{margin-left:auto;color:var(--dim);font-size:11px;transition:transform .2s}
+.card.open .c-head .arr{transform:rotate(90deg)}
+.card .c-body{display:none;padding:4px 14px 12px}
+.card.open .c-body{display:block}
+.step{margin-top:12px}
+.step .s-t{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--blue2)}
+.step .s-t .dot{flex:0 0 auto;width:20px;height:20px;border-radius:50%;border:1.5px solid var(--blue);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--blue2)}
+.step .s-desc{font-size:12px;color:var(--sub);margin-top:6px;line-height:1.7}
+.step .s-desc b{color:var(--text)}
+.step .s-img{margin-top:8px}
+.step .s-img img{width:100%;border-radius:9px;border:1px solid var(--line);display:block}
+.step .s-img .cap{font-size:10.5px;color:var(--dim);margin-top:4px}
+.tip{font-size:11.5px;color:var(--dim);line-height:1.7;background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.18);border-radius:9px;padding:9px 11px;margin-top:10px}
+.warn{font-size:11.5px;color:var(--orange);line-height:1.7;background:rgba(249,115,22,.07);border:1px solid rgba(249,115,22,.22);border-radius:9px;padding:9px 11px;margin-top:10px}
+/* 逆向流程表 */
+.flow-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:11.5px}
+.flow-table th,.flow-table td{border:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:middle}
+.flow-table th{background:rgba(59,130,246,.12);color:var(--blue2);font-weight:700;font-size:11px}
+.flow-table td b{color:var(--text)}
+.flow-table tr:nth-child(even) td{background:rgba(20,30,51,.5)}
+/* 视频 */
+.video-grid{display:flex;flex-direction:column;gap:9px;margin-top:8px}
+.vid-item{background:var(--bg2);border:1px solid var(--line);border-radius:11px;overflow:hidden}
+.vid-item .v-t{padding:9px 11px;font-size:12px;font-weight:700;color:var(--blue2)}
+.vid-item video{width:100%;display:block;background:#000}
+/* QA */
+.qa-item{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:11px 13px;margin-bottom:9px}
+.qa-item .q{font-size:12.5px;font-weight:700;line-height:1.6}
+.qa-item .q .tag{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;border-radius:6px;background:rgba(59,130,246,.18);color:var(--blue2);font-size:11px;font-weight:700;margin-right:6px}
+.qa-item .a{font-size:12px;color:var(--sub);line-height:1.75;margin-top:7px}
+.qa-item .a .tag2{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;border-radius:6px;background:rgba(34,197,94,.15);color:var(--green);font-size:11px;font-weight:700;margin-right:6px}
+.note-list{list-style:none;counter-reset:li}
+.note-list li{position:relative;padding:6px 0 6px 26px;font-size:12px;color:var(--sub);line-height:1.7;border-bottom:1px dashed var(--line)}
+.note-list li:last-child{border-bottom:none}
+.note-list li::before{counter-increment:li;content:counter(li);position:absolute;left:0;top:8px;width:18px;height:18px;border-radius:50%;background:rgba(249,115,22,.15);color:var(--orange);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.foot{font-size:10.5px;color:var(--dim);text-align:center;padding:18px 0 6px;line-height:1.7}
+.lightbox{display:none;position:fixed;inset:0;z-index:99;background:rgba(0,0,0,.92);align-items:center;justify-content:center;padding:16px}
+.lightbox.show{display:flex}
+.lightbox img{max-width:100%;max-height:100%;border-radius:8px}
+.lightbox .close{position:absolute;top:16px;right:20px;font-size:22px;color:#fff;background:rgba(255,255,255,.15);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.contact{display:inline-block;font-size:11px;color:var(--cyan);background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);border-radius:7px;padding:2px 8px;margin:2px 2px}
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <h1>购机通 · 供应商全流程工作台</h1>
+  <div class="sub">上架 → 发布 → 分享 → 下单 → 发货 → 收货 → 退换货 → 国补</div>
+</div>
+
+<div class="app-main">
+
+  <!-- 生命周期导航 -->
+  <div class="life-nav">
+    <div class="life-item on"><span class="n">1</span>上架准备</div>
+    <div class="life-item"><span class="n">2</span>发布产品</div>
+    <div class="life-item"><span class="n">3</span>分享买家</div>
+    <div class="life-item"><span class="n">4</span>买家下单</div>
+    <div class="life-item"><span class="n">5</span>发货履约</div>
+    <div class="life-item"><span class="n">6</span>收货对账</div>
+    <div class="life-item"><span class="n">7</span>退换货</div>
+    <div class="life-item"><span class="n">8</span>国补领取</div>
+  </div>
+
+  <div class="tip" style="margin-top:8px"><b>一句话总览：</b>各省公司通过【运营助手-分销管理】把商品批量上架到购机通（相当于在购机通开了区域自营分销店铺），门店在购机通【库存】页下单付款，SG 订单走审单→聚水潭→省仓发货，门店收货确认后系统每月 6/16/26 号出对账单，退换货走 5 步逆向流程，国补订单按券领取-使用-审计-开票结算闭环。</div>
+
+  <!-- ============ 1 上架准备 ============ -->
+  <div id="s1" class="section-title"><span class="bar"></span><span class="sec-num">1</span>上架准备</div>
+
+  <div class="card open">
+    <div class="c-head"><span>（一）市场助手注册 + 认证 + 开通平安钱包</span><span class="arr">▶</span></div>
+    <div class="c-body">
+      <div class="step">
+        <div class="s-t"><span class="dot">1</span>登录</div>
+        <div class="s-desc">扫描市场助手小程序二维码，或直接搜索【市场助手】小程序；点击【手机号快速验证】并【授权】手机号（务必使用常用微信且该手机号为微信绑定手机号）。</div>
+        <div class="s-img"><img src="supplier-img/img01.jpg" alt="扫码登录" onclick="openImg(this)"><div class="cap">① 扫描二维码登录</div></div>
+      </div>
+      <div class="step">
+        <div class="s-t"><span class="dot">2</span>注册主体</div>
+        <div class="s-desc">企业 / 个体工商户点击【注册新主体】并录入对应信息（已有主体可直接选择）；填写红框信息、勾选【注册即代表同意】后【确认注册】。</div>
+        <div class="s-img"><img src="supplier-img/img04.jpg" alt="注册新主体" onclick="openImg(this)"><div class="cap">注册新主体 / 选择企业或个体户</div></div>
+      </div>
+      <div class="step">
+        <div class="s-t"><span class="dot">3</span>实名认证</div>
+        <div class="s-desc">点击【我的】-【去开通】→ 填写【统一社会信用代码】【法人姓名】【法人身份证号】→【确认实名核验】。</div>
+        <div class="s-img"><img src="supplier-img/img07.jpg" alt="去开通" onclick="openImg(this)"><div class="cap">① 我的 → 去开通 → 实名核验</div></div>
+      </div>
+      <div class="step">
+        <div class="s-t"><span class="dot">4</span>开通平安钱包（收款用）</div>
+        <div class="s-desc"><b>企业：</b>填写【账户名称/银行账户/开户银行/银行联号】→ 获取打款金额 → 回填小额到款金额 + 短信验证码 → 绑定。<br><b>个体工商户：</b>可选【个人银行卡（法人）】或【对公账户】，完善信息后绑定。</div>
+        <div class="s-img"><img src="supplier-img/img09.jpg" alt="企业开通钱包" onclick="openImg(this)"><div class="cap">企业：填写账户信息 + 回填打款金额</div></div>
+        <div class="s-img"><img src="supplier-img/img12.jpg" alt="个体户开通钱包" onclick="openImg(this)"><div class="cap">个体户：个人银行卡（法人）/ 对公账户</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card open">
+    <div class="c-head"><span>（二）魔狮/分销上架前置条件</span><span class="arr">▶</span></div>
+    <div class="c-body">
+      <div class="step">
+        <div class="s-t"><span class="dot">1</span>开通权限</div>
+        <div class="s-desc">需要开通【运营助手】-【分销管理（订单助手）】权限，走 <b>90-03</b> 流程申请。</div>
+      </div>
+      <div class="step">
+        <div class="s-t"><span class="dot">2</span>确认收款主体</div>
+        <div class="s-desc">各省都有自己的收款主体，需要和<b>财务 BP</b> 确认最终用哪个主体（客户付款后将自动划至对应抬头公司账户）。</div>
+      </div>
+      <div class="step">
+        <div class="s-t"><span class="dot">3</span>组织选择</div>
+        <div class="s-desc">省分公司上架统一选择【<b>醒市组织</b>】（买家支付后直接流转待发货，自动归属订单、ERP 店铺）。</div>
+      </div>
+      <div class="step">
+        <div class="s-t"><span class="dot">4</span>收款主体钱包</div>
+        <div class="s-desc">各省公司收款主体需<b>开通平安钱包</b>方便收款；货主（上架省分公司主体）未开通钱包时买家无法下单。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 2 发布产品 ============ -->
+  <div id="s2" class="section-title"><span class="bar"></span><span class="sec-num">2</span>发布产品</div>
+
+  <div class="card open">
+    <div class="c-head"><span>（一）批量上架分销商品（魔狮自营分销）</span><span class="arr">▶</span></div>
+    <div class="c-body">
+      <div class="step">
+        <div class="s-t"><span class="dot">1</span>进入发布入口</div>
+        <div class="s-desc">运营助手 → <b>分销管理</b> → <b>分销活动</b> → <b>批量发布活动</b> → 新增活动；发布渠道选【购机通】。</div>
+      </div>
+      <div class="step">
+        <div class="s-t"><span class="dot">2</span>下载模板并填写</div>
+        <div class="s-desc">下载模板 → 按 Excel 中 Sheet2 选择商品和 SKU 名称 → 录入 Sheet1 → 维护好价格、库存、标签；<b>分销价 = 集采入仓含税价</b>，付款方式选【先款后货】，履约策略选【线下发货】。</div>
+      </div>
+      <div class="step">
+        <div class="s-t"><span class="dot">3</span>上传并上架</div>
+        <div class="s-desc">上传 Excel → 点击【上架成功】，商品进入【待发布】列表。若下拉列表框里没有收款公司主体：<b>把 Excel 这一列的数据有效性删除，手动输入收款公司主体</b>。</div>
+        <div class="s-img"><img src="supplier-img2/shangjia_batch.png" alt="批量上架" onclick="openImg(this)"><div class="cap">批量发布活动弹窗：下载模板 → 上传文件 → 上架成功</div></div>
+      </div>
+      <div class="step">
+        <div class="s-t"><span class="dot">4</span>编辑零售价 + 设置可售区域</div>
+        <div class="s-desc">批量上架默认【全国】；需在【待发布】中手动调整<b>可售区域（本省）</b>并编辑零售价（零售价需参考官网价，勿超售）。配置完成后【确认发布】，商品即在购机通库存页面上架成功。</div>
+        <div class="s-img"><img src="supplier-img2/quyu_set.png" alt="区域设置" onclick="openImg(this)"><div class="cap">分销活动编辑：分销类型/分销区域（全国→本省）/发布</div></div>
+      </div>
+      <div class="warn"><b>提示：</b>点击发布后显示【发布中】就是<b>已经上架</b>的意思，买家已可在前台可见。</div>
+    </div>
+  </div>
+
+  <div class="card open">
+    <div class="c-head"><span>（二）发布后买家可见范围</span><span class="arr">▶</span></div>
+    <div class="c-body">
+      <div class="s-desc" style="margin-top:8px;font-size:12px;line-height:1.8">
+        <b>① 默认全部采购商可见</b>（购机通分销渠道不指定分销商，全部门店可见）；<br>
+        <b>② 限售区域：</b>按省设置可售区域，买家按门店所在城市 → 全省 → 全国的报价逻辑取货；<br>
+        <b>③ 特殊商品不展示：</b>自由担保、已拆封、激活的、上架的"省内怕查/全国怕查"商品不在购机通库存页面展示；<br>
+        <b>④ 商品在国补商品库但做不了国补：</b>重新在运营助手上传导入国补商品价格修改表。
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 3 分享给买家 ============ -->
+  <div id="s3" class="section-title"><span class="bar"></span><span class="sec-num">3</span>分享给买家</div>
+  <div class="card" style="padding:14px">
+    <div class="s-desc" style="font-size:12px;line-height:1.8">
+      商品发布成功后无需额外"分享"动作——门店在购机通小程序【库存】页面即可看到你的商品。<br><br>
+      <b>商家推广方式：</b>告诉门店进入购机通小程序 → 点【库存】→ 筛选【个体】→ 在品牌列选择对应品牌 → 找到你的 SKU 下单。<br><br>
+      <b>可辅助动作：</b>把具体 SKU/品牌名/价格发给门店，引导其在库存页搜索；如门店未签约（魔狮自营分销），需先引导签约（见下节第 4 步）。<br><br>
+      <span class="contact">采购商=门店</span><span class="contact">卖家=省公司</span><span class="contact">发货仓=专属省仓</span>
+    </div>
+  </div>
+
+  <!-- ============ 4 买家下单 ============ -->
+  <div id="s4" class="section-title"><span class="bar"></span><span class="sec-num">4</span>买家下单</div>
+
+  <div class="card open">
+    <div class="c-head"><span>（一）买家下单前准备（3 项缺一不可）</span><span class="arr">▶</span></div>
+    <div class="c-body">
+      <div class="step">
+        <div class="s-t"><span class="dot">1</span>主体身份合规</div>
+        <div class="s-desc">买家身份需是<b>企业或个体工商户</b>（个人无法下单）。判断方式以门店列表中<b>主体类型</b>为准；能良系货主只做含税业务，个人无法开票所以不能买自营分销的货。</div>
+      </div>
+      <div class="step">
+        <div class="s-t"><span class="dot">2</span>开通平安钱包并充值</div>
+        <div class="s-desc">下单必须使用【平安钱包】付款，<b>暂不支持微信、支付宝、云闪付</b>；按需完成钱包充值。</div>
+      </div>
+      <div class="step">
+        <div class="s-t"><span class="dot">3</span>签署框架合同</div>
+        <div class="s-desc">在客户 PC 管理后台 <b>https://xswc.xingshiapp.cn/</b> 完成框架合同签署（签署一次长期有效）。<b>注意：</b>建议用电脑登录签署；若签约后看不到合同，可把公司主体发给 <span class="contact">李方晓</span><span class="contact">朱华伟</span> 手动维护。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card open">
+    <div class="c-head"><span>（二）买家下单路径</span><span class="arr">▶</span></div>
+    <div class="c-body">
+      <div class="step">
+        <div class="s-t"><span class="dot">1</span>进入分销频道</div>
+        <div class="s-desc">登录购机通 → 进入【<b>库存</b>】页面 → 进入<b>分销频道</b>（未签约的先签约）→ 找到【区采货盘】→ 找到对应的商品。</div>
+        <div class="s-img"><img src="supplier-img2/kucun_xiadan.png" alt="库存下单" onclick="openImg(this)"><div class="cap">库存页：筛选【个体】→ 选品牌/SKU → 详情页下单</div></div>
+      </div>
+      <div class="step">
+        <div class="s-t"><span class="dot">2</span>下单支付</div>
+        <div class="s-desc">选 SKU → 选价格 → 选收货地址 → <b>平安钱包支付</b>（库存不可超售）→ 生成 SG 订单（SG 单号即订单助手原始单号）。下单支付后机器人会在订单群通知，同时扣减购机通库存。</div>
+        <div class="s-img"><img src="supplier-img2/dingdan_notify.png" alt="订单群通知" onclick="openImg(this)"><div class="cap">下单后订单群自动通知（含型号/单价/数量/总金额）</div></div>
+      </div>
+      <div class="tip"><b>注意：</b>库存被扣减归零后商品即不可售，需在运营助手-分销管理-分销活动-发布中-编辑活动，再次同步库存给购机通。</div>
+    </div>
+  </div>
+
+  <!-- ============ 5 发货履约 ============ -->
+  <div id="s5" class="section-title"><span class="bar"></span><span class="sec-num">5</span>发货履约</div>
+
+  <div class="card open">
+    <div class="c-head"><span>（一）卖家接单发货（运营助手）</span><span class="arr">▶</span></div>
+    <div class="c-body">
+      <div class="step">
+        <div class="s-t"><span class="dot">1</span>查看待发货订单</div>
+        <div class="s-desc">待发货订单出现在 <b>运营助手 → 分销管理 → 订单管理 → 待发货</b> 列表中，聚水潭同步生成待发货订单。</div>
+        <div class="s-img"><img src="supplier-img2/daifahuo_list.png" alt="待发货列表" onclick="openImg(this)"><div class="cap">订单管理-待发货列表</div></div>
+        <div class="s-img"><img src="supplier-img2/dingdan_detail.png" alt="订单详情" onclick="openImg(this)"><div class="cap">订单详情：订单编号/商品/待发货状态</div></div>
+      </div>
+      <div class="step">
+        <div class="s-t"><span class="dot">2</span>审单发货</div>
+        <div class="s-desc">SG 订单给到<b>审单人员</b>审单至具体省仓发货：在【审单&运营沟通群】中发送聚水潭中对应订单的线上订单号；审单联系 <span class="contact">李明叶</span><span class="contact">鲍玉康</span>。各项物流信息、状态自动互相同步。</div>
+      </div>
+      <div class="step">
+        <div class="s-t"><span class="dot">3</span>业务归属人</div>
+        <div class="s-desc">业务归属人默认为<b>省总</b>；订单状态在【已收货】之前支持二次编辑，已收货后由日清系统归档，如需调整走日清调整列流程。</div>
+        <div class="s-img"><img src="supplier-img2/guishuren.png" alt="业务归属人" onclick="openImg(this)"><div class="cap">订单管理：筛选 + 批量指派给归属人</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card open">
+    <div class="c-head"><span>（二）外部商发货（市场助手渠道）</span><span class="arr">▶</span></div>
+    <div class="c-body">
+      <div class="s-desc" style="margin-top:8px;font-size:12px;line-height:1.8">
+        外部商在市场助手渠道（非省分公司主体）上架的订单：在【市场助手】-【我出售的】找到待发货订单 → 点击【发货】→ 选择配送方式（快递发货+单号 / 供货商自配送：送货上门、快递发货两种，买方无需支付快递费）→ 录入串码 → 确认发货。<br>
+        <b>能良系发货：</b>订单推送聚水潭，请到聚水潭发货。
+      </div>
+      <div class="s-img"><img src="supplier-img/img24.jpg" alt="发货" onclick="openImg(this)"><div class="cap">① 点击发货</div></div>
+      <div class="s-img"><img src="supplier-img/img25.jpg" alt="发货信息" onclick="openImg(this)"><div class="cap">② 选择发货方式 + 串码</div></div>
+    </div>
+  </div>
+
+  <!-- ============ 6 确认收货 & 对账 ============ -->
+  <div id="s6" class="section-title"><span class="bar"></span><span class="sec-num">6</span>确认收货 &amp; 对账</div>
+
+  <div class="card open">
+    <div class="c-head"><span>（一）买家确认收货</span><span class="arr">▶</span></div>
+    <div class="c-body">
+      <div class="s-desc" style="margin-top:8px;font-size:12px;line-height:1.8">
+        收到货之后，买家在购机通小程序 <b>【我的】-【铺货进货】-【进货订单】</b> 中查看，点击<b>【去收货】</b>完成确认收货。
+      </div>
+      <div class="s-img"><img src="supplier-img2/qu_shouhuo.png" alt="去收货" onclick="openImg(this)"><div class="cap">进货订单 → 去收货</div></div>
+      <div class="tip"><b>库存模块下单补充：</b>原【进货】模块兼容到【库存】后，仅改变买方下单链路；来源于【市场助手】的订单：卖家收千 2 服务费，买家服务费千 5（目前未收）；【库存】页无平安钱包提示，但仍需在平安钱包充值并使用平安钱包付款。</div>
+    </div>
+  </div>
+
+  <div class="card open">
+    <div class="c-head"><span>（二）蓝票对账（卖家收款）</span><span class="arr">▶</span></div>
+    <div class="c-body">
+      <div class="step">
+        <div class="s-t"><span class="dot">1</span>对账周期</div>
+        <div class="s-desc">系统在每月 <b>6、16、26 号</b> 自动出对账单，对账范围是时间段内<b>已完成收货</b>订单：6 号对上月 21 号至上月末；16 号对当月 1-10 号；26 号对当月 11-20 号。</div>
+        <div class="s-img"><img src="supplier-img2/lanpiao_zhangqi.png" alt="蓝票账期" onclick="openImg(this)"><div class="cap">蓝票账期固定时间</div></div>
+      </div>
+      <div class="step">
+        <div class="s-t"><span class="dot">2</span>买家对账</div>
+        <div class="s-desc">买家需在客户 PC 管理后台 <b>https://xswc.xingshiapp.cn/</b> 完成对账，并查收发票（我的订单-财务管理-待开票/已开票账单）。</div>
+        <div class="s-img"><img src="supplier-img2/duizhang.png" alt="对账" onclick="openImg(this)"><div class="cap">我的订单：待开票账单 / 已开票账单 / 查看订单明细</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 7 退换货 ============ -->
+  <div id="s7" class="section-title"><span class="bar"></span><span class="sec-num">7</span>退换货（逆向流程）</div>
+
+  <div class="card open">
+    <div class="c-head"><span>（一）逆向 5 步流程</span><span class="arr">▶</span></div>
+    <div class="c-body">
+      <table class="flow-table">
+        <tr><th>行为</th><th>位置</th><th>执行人</th><th>说明</th></tr>
+        <tr><td><b>① 申请售后</b></td><td>购机通小程序</td><td>买家</td><td>订单详情 → 点击【申请售后】</td></tr>
+        <tr><td><b>② 售后审核</b></td><td>运营助手-订单管理</td><td>客服</td><td>退货退款列表审核（魔狮分销在分销管理-订单管理中审核）</td></tr>
+        <tr><td><b>③ 售后回寄</b></td><td>运营助手</td><td>业务员</td><td>填写退货物流单号 → 补单后核销</td></tr>
+        <tr><td><b>④ 售后签收</b></td><td>运营助手</td><td>客服</td><td>已签收商品 / 退换异常处理</td></tr>
+        <tr><td><b>⑤ 售后退款</b></td><td>购机通</td><td>卖家</td><td>退货退款操作确认</td></tr>
+      </table>
+      <div class="s-img" style="margin-top:10px"><img src="supplier-img2/nixiang_shenqing.png" alt="申请售后" onclick="openImg(this)"><div class="cap">① 买家申请售后（订单详情-申请售后）</div></div>
+      <div class="s-img"><img src="supplier-img2/nixiang_shenhe1.png" alt="售后审核" onclick="openImg(this)"><div class="cap">② 售后审核（运营助手-退货退款待处理）</div></div>
+      <div class="s-img"><img src="supplier-img2/nixiang_huiji.png" alt="售后回寄" onclick="openImg(this)"><div class="cap">③ 售后回寄（填写物流名称+单号 → 补单后核销）</div></div>
+      <div class="s-img"><img src="supplier-img2/nixiang_qianshou.png" alt="售后签收" onclick="openImg(this)"><div class="cap">④ 售后签收（已签收商品 / 退换异常处理）</div></div>
+      <div class="s-img"><img src="supplier-img2/nixiang_tuikuan.png" alt="售后退款" onclick="openImg(this)"><div class="cap">⑤ 售后退款（退货退款确认）</div></div>
+      <div class="tip"><b>红冲：</b>系统每月 6/16/26 号对已完成逆向订单出对账单，税务同事执行红票开具并录入系统。国补退货开票：直接红冲对应订单发票，大商红冲后在新能人家 → 管报 → 财务审批流程 → 10-01 发票申请。</div>
+    </div>
+  </div>
+
+  <div class="card open">
+    <div class="c-head"><span>（二）退换货关键问答</span><span class="arr">▶</span></div>
+    <div class="c-body">
+      <div class="qa-item" style="margin-top:8px">
+        <div class="q"><span class="tag">问</span>客户退款多久到账？</div>
+        <div class="a"><span class="tag2">答</span>今天发起退款，明天才能到账。</div>
+      </div>
+      <div class="qa-item">
+        <div class="q"><span class="tag">问</span>下单有误发起退货退款后，申领的国补券会返回账户吗？</div>
+        <div class="a"><span class="tag2">答</span>发起全额退款后，券不会退回账户，但会在<b>七个工作日</b>内恢复领券资格，届时可重新领取。</div>
+      </div>
+      <div class="qa-item">
+        <div class="q"><span class="tag">问</span>客户取消国补单退款，流程怎么走？</div>
+        <div class="a"><span class="tag2">答</span>客户购机通点【申请退款】→ 门店后台点【确认收货】→ 等待售后部门询问情况是否退款 → 售后部门操作退款（售后审核找 <span class="contact">彭蝶</span>）。</div>
+      </div>
+      <div class="qa-item">
+        <div class="q"><span class="tag">问</span>国补审计显示订单金额大于国补金额怎么办？</div>
+        <div class="a"><span class="tag2">答</span>找消费者退货退款，最好先在备案表里确认一下。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 8 国补领取与使用 ============ -->
+  <div id="s8" class="section-title"><span class="bar"></span><span class="sec-num">8</span>国补领取与使用</div>
+
+  <div class="card open">
+    <div class="c-head"><span>（一）领券操作视频</span><span class="arr">▶</span></div>
+    <div class="c-body">
+      <div class="video-grid">
+        <div class="vid-item"><div class="v-t">北京 · 国补领券</div><video src="videos2/bj_lingquan.mp4" controls preload="metadata" playsinline webkit-playsinline></video></div>
+        <div class="vid-item"><div class="v-t">广东 · 端内领券</div><video src="videos2/gd_lingquan.mp4" controls preload="metadata" playsinline webkit-playsinline></video></div>
+        <div class="vid-item"><div class="v-t">湖北 · 领券</div><video src="videos2/hb_lingquan.mp4" controls preload="metadata" playsinline webkit-playsinline></video></div>
+        <div class="vid-item"><div class="v-t">山西 · 领券操作</div><video src="videos2/sx_lingquan.mp4" controls preload="metadata" playsinline webkit-playsinline></video></div>
+        <div class="vid-item"><div class="v-t">云闪付 · 领券通用版</div><video src="videos2/ysf_lingquan.mp4" controls preload="metadata" playsinline webkit-playsinline></video></div>
+        <div class="vid-item"><div class="v-t">云闪付 · 领取其他省国补券如何解绑</div><video src="videos2/ysf_jiebang.mp4" controls preload="metadata" playsinline webkit-playsinline></video></div>
+        <div class="vid-item"><div class="v-t">消费者 · 领券下单</div><video src="videos2/xfz_xiadan.mp4" controls preload="metadata" playsinline webkit-playsinline></video></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card open">
+    <div class="c-head"><span>（二）国补使用要点</span><span class="arr">▶</span></div>
+    <div class="c-body">
+      <div class="qa-item" style="margin-top:8px">
+        <div class="q"><span class="tag">问</span>客户付款跳转云闪付没有用到优惠券？</div>
+        <div class="a"><span class="tag2">答</span>查看实名是否一致、定位是否开启、APP 是否更新、领的券和活动是否是同一个；打开微信云闪付小程序-我的-我的优惠券查看券详情；若定位问题但手机定位已开，将小程序删除重新进入。</div>
+      </div>
+      <div class="qa-item">
+        <div class="q"><span class="tag">问</span>国补审核图片有什么要求？</div>
+        <div class="a"><span class="tag2">答</span>手机：线上国补要求包装 SN + 手机激活 SN + 包装手机激活 SN + 人包装手机，水印带时间+地点+经纬度；线下国补要求包装 SN + 手机激活 SN + 包装手机 SN，水印带时间+地点+经纬度。电脑：背板串码+包装盒串码+开机屏幕显示 SN，水印需带时间+地点+经纬度。图片不符审核不通过 → 编辑替换后提交。</div>
+      </div>
+      <div class="qa-item">
+        <div class="q"><span class="tag">问</span>怎么查看国补商品备案金额？</div>
+        <div class="a"><span class="tag2">答</span>商委会发相关的国补商品备案表；表格里没有的在运营助手 → 购机助手 → 国补商品库里查看。国补售价不能超过备案表里的价格。</div>
+      </div>
+      <div class="qa-item">
+        <div class="q"><span class="tag">问</span>国补申请银联上送怎么做？</div>
+        <div class="a"><span class="tag2">答</span>线上国补：运营助手 → 购机助手 → 国补申请 → 提交审计 → 输入提交城市 → 编辑（核对实名及激活图片信息，要平台开票后及上传了支付凭证才能提交审计）；线下国补：同上路径，需在云闪付上提交。</div>
+      </div>
+      <div class="qa-item">
+        <div class="q"><span class="tag">问</span>国补发票有什么要求？</div>
+        <div class="a"><span class="tag2">答</span>国补只能用于个人消费，公司开给消费者的发票购方抬头只能是<b>个人</b>，不能用公司抬头开。</div>
+      </div>
+      <div class="qa-item">
+        <div class="q"><span class="tag">问</span>做完一单国补后多久结算款项？押金多久退回？</div>
+        <div class="a"><span class="tag2">答</span>商家开票后，一般为 T+1/T+2 日结算；国补押金 2-3 个月，政府结算后再退回。大商上传发票后 T+1 回款，10:00 之后上传的 T+2 回款。</div>
+      </div>
+      <div class="qa-item">
+        <div class="q"><span class="tag">问</span>国补分销系统流程问题找谁？</div>
+        <div class="a"><span class="tag2">答</span>国补：<span class="contact">许信斌</span>　分销：<span class="contact">李方晓</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 9 高频问答 ============ -->
+  <div id="s9" class="section-title"><span class="bar"></span><span class="sec-num">9</span>高频问答</div>
+
+  <div class="qa-item">
+    <div class="q"><span class="tag">问</span>魔狮分销流程是什么？</div>
+    <div class="a"><span class="tag2">答</span>后台上传路径：运营助手 → 分销管理 → 分销活动 → 批量发布活动 → 新增活动，上传相关表格，在待发布中进行零售价编辑发布；客户下单路径：登录购机通 → 进入【库存】页面 → 进入分销频道（没签约的先签约）→ 找到区采货盘 → 找到对应的商品。</div>
+  </div>
+  <div class="qa-item">
+    <div class="q"><span class="tag">问</span>魔狮个人可以下单吗？</div>
+    <div class="a"><span class="tag2">答</span>货主是能良系，能良只能做含税业务，所以个人不能买自营分销的货（无法开票）；个体工商户 + 企业签约后可以下单。</div>
+  </div>
+  <div class="qa-item">
+    <div class="q"><span class="tag">问</span>魔狮个体工商户下不了单是什么原因？</div>
+    <div class="a"><span class="tag2">答</span>可以看看门店的主体类型是企业还是个人，门店主体类型是企业才可以下单。</div>
+  </div>
+  <div class="qa-item">
+    <div class="q"><span class="tag">问</span>魔狮下单提示【货主】未开通钱包？</div>
+    <div class="a"><span class="tag2">答</span>【货主】指上架魔狮的省分公司主体，需要开通钱包买家才可以下单；可用上架主体登录购机通，找到钱包按流程开通；如需要钱包材料，联系省分财务 BP 咨询。</div>
+  </div>
+  <div class="qa-item">
+    <div class="q"><span class="tag">问</span>魔狮下单时需要签约，但点击签约看不到合同？</div>
+    <div class="a"><span class="tag2">答</span>①已在修复，可先把公司主体发给李方晓、朱华伟手动维护；②让买家用电脑登录 https://xswc.xingshiapp.cn 进行签约。</div>
+  </div>
+  <div class="qa-item">
+    <div class="q"><span class="tag">问</span>魔狮买家下单后怎么发货？</div>
+    <div class="a"><span class="tag2">答</span>和之前的分销订单一样，SG 订单给到审单人员审单发货，审单联系李明叶、鲍玉康。</div>
+  </div>
+  <div class="qa-item">
+    <div class="q"><span class="tag">问</span>购机通分销发货审单找谁？</div>
+    <div class="a"><span class="tag2">答</span>在【审单&运营沟通群】中发送聚水潭中对应订单的线上订单号。</div>
+  </div>
+  <div class="qa-item">
+    <div class="q"><span class="tag">问</span>魔狮上架需要哪些权限？</div>
+    <div class="a"><span class="tag2">答</span>需要开通【运营助手】-【分销管理（订单助手）】权限，走 90-03 申请。</div>
+  </div>
+  <div class="qa-item">
+    <div class="q"><span class="tag">问</span>魔狮上架选能良组织还是醒市组织？</div>
+    <div class="a"><span class="tag2">答</span>省分公司上架统一选择【醒市组织】；购机通渠道且是醒市组织的订单，买家支付后直接流转待发货，无需业务侧审核。</div>
+  </div>
+  <div class="qa-item">
+    <div class="q"><span class="tag">问</span>魔狮上架区域选本省怎么设置？</div>
+    <div class="a"><span class="tag2">答</span>批量上架时默认选【全国】，选择【新增活动】把模版上传后，手动调整可售区域为本省。</div>
+  </div>
+  <div class="qa-item">
+    <div class="q"><span class="tag">问</span>商家发布商品时发现没有该型号？</div>
+    <div class="a"><span class="tag2">答</span>在其他系列里面查询，若无该型号请及时联系品牌运营。</div>
+  </div>
+  <div class="qa-item">
+    <div class="q"><span class="tag">问</span>商家发布商品时显示超过最大金额？</div>
+    <div class="a"><span class="tag2">答</span>请按照参考官网零售价，勿超过零售价售卖；若填写零售价仍显示超过最大金额，及时联系品牌运营。</div>
+  </div>
+  <div class="qa-item">
+    <div class="q"><span class="tag">问</span>购机通与市场助手是什么关系？</div>
+    <div class="a"><span class="tag2">答</span>市场助手更偏向大订单分销铺货类，购机通包含了市场助手的数据；市场助手做不了国补。</div>
+  </div>
+  <div class="qa-item">
+    <div class="q"><span class="tag">问</span>购机通 SG 单号是什么？</div>
+    <div class="a"><span class="tag2">答</span>购机通 SG 单号是订单助手的原始单号。</div>
+  </div>
+  <div class="qa-item">
+    <div class="q"><span class="tag">问</span>能良系门店可以买分销商品吗？</div>
+    <div class="a"><span class="tag2">答</span>能良系门店不可购买分销管理上架的分销商品；分销商品的发布渠道不选购机通，商品不会出现在购机通库存页面。</div>
+  </div>
+
+  <div class="foot">
+    数据来源：飞书《魔狮购机通自营分销SOP》《电商通分销》《如何在【库存】模块下进货订单》《购机通-进货》《购机通QA库》<br>
+    版本：2026-09-30 · 供购机通供应商/省分公司内部使用
+  </div>
+</div>
+
+<!-- 图片预览 -->
+<div class="lightbox" id="lb" onclick="closeImg()">
+  <span class="close">✕</span>
+  <img id="lbImg" src="" alt="">
+</div>
+
+<script>
+// 折叠卡片
+document.querySelectorAll('.c-head').forEach(function(h){
+  h.addEventListener('click',function(){ this.parentElement.classList.toggle('open'); });
+});
+// 图片放大
+function openImg(img){ var lb=document.getElementById('lb'); document.getElementById('lbImg').src=img.src; lb.classList.add('show'); }
+function closeImg(){ document.getElementById('lb').classList.remove('show'); }
+document.addEventListener('keydown',function(e){ if(e.key==='Escape')closeImg(); });
+// 生命周期导航点击滚动
+document.querySelectorAll('.life-item').forEach(function(it,i){
+  it.addEventListener('click',function(){
+    var ids=['s1','s2','s3','s4','s5','s6','s7','s8'];
+    if(i<ids.length){ var el=document.getElementById(ids[i]); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); }
+    document.querySelectorAll('.life-item').forEach(function(x){x.classList.remove('on');});
+    it.classList.add('on');
+  });
+});
+</script>
+</body>
+</html>
