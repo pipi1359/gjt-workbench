@@ -578,21 +578,42 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 
 <button class="editfab" id="editFab" onclick="toggleEdit()">✏️</button>
 <div class="editpanel" id="editPanel">
-  <div class="ept">✏️ 编辑模式：直接点击任意文字修改，底部已预留空间不会被面板挡住</div>
-  <button class="s" onclick="saveEdits()">💾 保存修改（本机浏览器）</button>
-  <button class="e" onclick="exportHtml()">📤 导出HTML文件（发我即可更新公网）</button>
+  <div class="ept">✏️ 编辑模式：直接点击任意文字修改，保存后自动同步云端，同事刷新即可看到</div>
+  <button class="s" onclick="saveEdits()">💾 保存修改（自动同步到云端）</button>
+  <button class="e" onclick="exportHtml()">📤 导出HTML文件（备份用）</button>
   <button class="c" onclick="toggleEdit()">✔️ 完成编辑</button>
 </div>
 
 <script>
 var EDIT_KEY='gjt_edits_v3';
+var SUPABASE_URL='https://xwwdksbxxhbqnlrvegus.supabase.co';
+var SUPABASE_KEY='sb_publishable_V-PcQl_E8BRf0lTBgE2Q-w_nRznHGDp';
+var TBL='workbench_content';
+function supHdrs(){
+  return {apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'};
+}
+function clearEditAttrs(){
+  var els=document.getElementById('root').querySelectorAll('[contenteditable]');
+  for(var i=0;i<els.length;i++){els[i].removeAttribute('contenteditable')}
+}
 function restoreEdits(){
   var s='';
   try{s=localStorage.getItem(EDIT_KEY)||localStorage.getItem('gjt_edits_v2')||'';}catch(e){}
   if(s){document.getElementById('root').innerHTML=s;}
-  var els=document.getElementById('root').querySelectorAll('[contenteditable]');
-  for(var i=0;i<els.length;i++){els[i].removeAttribute('contenteditable')}
+  clearEditAttrs();
 }
+function loadCloud(){
+  fetch(SUPABASE_URL+'/rest/v1/'+TBL+'?select=content&id=eq.root',{headers:supHdrs()})
+  .then(function(r){return r.json()})
+  .then(function(d){
+    if(d&&d[0]&&d[0].content){
+      document.getElementById('root').innerHTML=d[0].content;
+      clearEditAttrs();
+      try{localStorage.setItem(EDIT_KEY,d[0].content)}catch(e){}
+    }
+  }).catch(function(){});
+}
+function showMsg(t){try{alert(t)}catch(e){}}
 var editOn=false;
 function setEdit(on){
   var all=document.getElementById('root').querySelectorAll('*');
@@ -609,14 +630,22 @@ function toggleEdit(){
   document.body.style.paddingBottom=editOn?'230px':'70px';
   document.getElementById('editFab').textContent=editOn?'✔️':'✏️';
   document.getElementById('editFab').style.background=editOn?'#1b8a5a':'linear-gradient(135deg,#e08a2e,#ffb454)';
-  if(!editOn){alert('已退出编辑模式。若需保留修改，请点过"保存修改"。')}
+  if(!editOn){showMsg('已退出编辑模式。若需同步给同事，请点"保存修改"。')}
 }
 function saveEdits(){
-  try{localStorage.setItem(EDIT_KEY,document.getElementById('root').innerHTML);alert('✅ 已保存到本机浏览器。刷新页面后修改仍在（同一浏览器）。')}catch(e){alert('保存失败：'+e.message)}
+  var root=document.getElementById('root');
+  var content=root.innerHTML;
+  try{localStorage.setItem(EDIT_KEY,content)}catch(e){}
+  var payload={id:'root',content:content,updated_at:new Date().toISOString()};
+  fetch(SUPABASE_URL+'/rest/v1/'+TBL,{method:'POST',headers:supHdrs(),body:JSON.stringify(payload)})
+  .then(function(r){
+    if(r.ok){showMsg('✅ 已同步到云端！同事刷新页面即可看到最新内容。')}
+    else{showMsg('⚠️ 云端同步失败(状态'+r.status+')，修改已保存在本机。请检查Supabase表是否已创建。')}
+  })
+  .catch(function(e){showMsg('⚠️ 云端同步失败：'+e.message+'（修改已保存在本机）')});
 }
 function exportHtml(){
   var root=document.getElementById('root');
-  var saved=root.innerHTML;
   var els=root.querySelectorAll('[contenteditable]');
   var on=[];
   for(var i=0;i<els.length;i++){on.push(els[i].getAttribute('contenteditable'));els[i].removeAttribute('contenteditable')}
@@ -626,8 +655,8 @@ function exportHtml(){
     var blob=new Blob([html],{type:'text/html;charset=utf-8'});
     var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mendian-all-已编辑.html';
     document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},3000);
-    alert('📤 已导出HTML文件（含你的修改）。把该文件发给我，即可更新公网链接让同事看到。');
-  }catch(e){alert('导出失败：'+e.message)}
+    showMsg('📤 已导出HTML文件（含你的修改）。也可直接交给管理员更新。');
+  }catch(e){showMsg('导出失败：'+e.message)}
 }
 function lb(img,cap){var d=document.getElementById('lb');d.style.display='flex';document.getElementById('lbImg').src=img.src;document.getElementById('lbCap').textContent=cap||'';document.body.style.overflow='hidden'}
 function closeLb(){document.getElementById('lb').style.display='none';document.body.style.overflow=''}
@@ -642,6 +671,7 @@ function sw(name){
   window.scrollTo(0,70);
 }
 restoreEdits();
+loadCloud();
 </script>
 </body>
 </html>
