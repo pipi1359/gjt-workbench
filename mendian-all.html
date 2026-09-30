@@ -585,25 +585,41 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 </div>
 
 <script>
-var EDIT_KEY='gjt_edits_v2';
+var EDIT_KEY='gjt_edits_v3';
 function restoreEdits(){
   try{var s=localStorage.getItem(EDIT_KEY);if(s){document.getElementById('root').innerHTML=s;}}catch(e){}
+  var els=document.getElementById('root').querySelectorAll('[contenteditable]');
+  for(var i=0;i<els.length;i++){els[i].removeAttribute('contenteditable')}
 }
 var editOn=false;
+function setEdit(on){
+  var all=document.getElementById('root').querySelectorAll('*');
+  for(var i=0;i<all.length;i++){
+    var el=all[i],t=el.tagName;
+    if(t==='IMG'||t==='VIDEO'||t==='A'||t==='BUTTON'||t==='INPUT'||t==='BR'){continue}
+    if(on){el.setAttribute('contenteditable','true')}
+    else{el.removeAttribute('contenteditable')}
+  }
+}
 function toggleEdit(){
-  editOn=!editOn;
-  var els=document.querySelectorAll('#root .card p,#root .card h2,#root .overview p,#root .overview h2,#root .step .t,#root .step .d,#root .swiper .sc .t,#root .swiper .sc .d,#root .warn,#root .tip,#root .path,#root .pics .cap,#root .footer,#root .header h1,#root .header .sub,#root .ept');
-  for(var i=0;i<els.length;i++){els[i].contentEditable=editOn?'true':'false'}
+  editOn=!editOn; setEdit(editOn);
   document.getElementById('editPanel').style.display=editOn?'flex':'none';
   document.getElementById('editFab').textContent=editOn?'✔️':'✏️';
   document.getElementById('editFab').style.background=editOn?'#1b8a5a':'linear-gradient(135deg,#e08a2e,#ffb454)';
+  if(!editOn){alert('已退出编辑模式。修改会自动保留（需点过"保存修改"才会存到本机）。')}
 }
 function saveEdits(){
-  try{localStorage.setItem(EDIT_KEY,document.getElementById('root').innerHTML);alert('✅ 已保存到本机浏览器。刷新页面后修改仍在（同一浏览器）。');}catch(e){alert('保存失败：'+e.message)}
+  try{localStorage.setItem(EDIT_KEY,document.getElementById('root').innerHTML);alert('✅ 已保存到本机浏览器。刷新页面后修改仍在（同一浏览器）。')}catch(e){alert('保存失败：'+e.message)}
 }
 function exportHtml(){
+  var root=document.getElementById('root');
+  var saved=root.innerHTML;
+  var els=root.querySelectorAll('[contenteditable]');
+  var on=[];
+  for(var i=0;i<els.length;i++){on.push(els[i].getAttribute('contenteditable'));els[i].removeAttribute('contenteditable')}
+  var html='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
+  for(var j=0;j<els.length;j++){if(on[j]){els[j].setAttribute('contenteditable',on[j])}}
   try{
-    var html='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
     var blob=new Blob([html],{type:'text/html;charset=utf-8'});
     var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mendian-all-已编辑.html';
     document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},3000);
