@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>购机通 · 门店操作总台</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#0b1220;color:#e8ecf4;min-height:100vh;padding-bottom:70px}
+.header{position:sticky;top:0;z-index:100;background:linear-gradient(135deg,#0f1a2e,#16304f);padding:14px 14px 10px;border-bottom:1px solid rgba(255,255,255,.06)}
+.header h1{font-size:18px;font-weight:700;color:#fff;letter-spacing:.5px}
+.header .sub{font-size:11px;color:#8fa3bf;margin-top:3px}
+/* 主 Tab 切换 */
+.tabs{position:sticky;top:70px;z-index:99;background:rgba(11,18,32,.95);padding:9px 12px;display:flex;gap:10px;border-bottom:1px solid rgba(255,255,255,.05)}
+.tabs .tb{flex:1;text-align:center;padding:10px 6px;border-radius:12px;background:#172236;color:#b9c8dd;font-size:13px;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,.06)}
+.tabs .tb.on{background:linear-gradient(135deg,#2f6fed,#4f8dff);color:#fff;border-color:transparent;box-shadow:0 2px 10px rgba(47,111,237,.35)}
+.tabs .tb .en{display:block;font-size:9px;color:#8fa3bf;margin-top:2px;font-weight:400}
+.tabs .tb.on .en{color:#d5e3ff}
+/* 模块胶囊导航 */
+.mnav{display:flex;gap:7px;overflow-x:auto;padding:9px 12px;white-space:nowrap;scrollbar-width:none;-webkit-overflow-scrolling:touch;position:sticky;top:128px;z-index:98;background:rgba(11,18,32,.95)}
+.mnav::-webkit-scrollbar{display:none}
+.mnav a{flex:0 0 auto;padding:6px 13px;border-radius:18px;background:#172236;color:#b9c8dd;font-size:12px;text-decoration:none}
+.mnav a.on{background:#2f6fed;color:#fff;font-weight:600}
+.panel{display:none}
+.panel.active{display:block}
+.section{padding:14px 14px 4px;scroll-margin-top:186px}
+.card{background:#101c30;border-radius:14px;padding:14px;margin-bottom:12px;border:1px solid rgba(255,255,255,.05)}
+.card h2{font-size:14px;color:#fff;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.card h2 .no{background:#2f6fed;color:#fff;width:20px;height:20px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;flex:0 0 auto}
+.card h2 .no.g{background:#1b8a5a}
+.card h2 .no.o{background:#e08a2e}
+.card .path{font-size:11px;color:#7fb0ff;margin:2px 0 10px;background:rgba(47,111,237,.08);display:inline-block;padding:3px 8px;border-radius:6px}
+.card p{font-size:12.5px;line-height:1.7;color:#c6d2e4}
+.card .hl{color:#ffb454;font-weight:600}
+.card .warn{background:rgba(255,180,84,.08);border-left:3px solid #ffb454;padding:7px 9px;border-radius:6px;font-size:11.5px;color:#ffd9a0;margin-top:10px;line-height:1.65}
+.card .tip{background:rgba(47,111,237,.08);border-left:3px solid #2f6fed;padding:7px 9px;border-radius:6px;font-size:11.5px;color:#a9c6f5;margin-top:8px;line-height:1.65}
+/* 横滑步骤组 */
+.swiper{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px 12px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.swiper::-webkit-scrollbar{display:none}
+.swiper .sc{flex:0 0 72%;scroll-snap-align:start;background:#15223a;border-radius:12px;padding:12px;border:1px solid rgba(255,255,255,.07)}
+.swiper .sc .no{display:inline-flex;align-items:center;justify-content:center;background:#2f6fed;color:#fff;min-width:20px;height:20px;border-radius:10px;font-size:11px;font-weight:700;padding:0 6px;margin-bottom:8px}
+.swiper .sc img{width:100%;border-radius:9px;border:1px solid rgba(255,255,255,.08);cursor:pointer;background:#0b1220;max-height:320px;object-fit:contain}
+.swiper .sc .t{font-size:12.5px;color:#fff;font-weight:600;margin-top:8px}
+.swiper .sc .d{font-size:11.5px;color:#aab8cd;line-height:1.6;margin-top:3px}
+.swiper .sc .d b{color:#ffb454}
+.hint{display:flex;align-items:center;gap:6px;font-size:10.5px;color:#5f7188;margin:0 0 8px}
+.hint::before,.hint::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.08)}
+.hint span{flex:0 0 auto}
+/* 门店现货图片两列网格 */
+.pics{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:8px}
+.pics .pic{width:100%}
+.pics img{width:100%;height:auto;max-height:250px;object-fit:contain;border-radius:8px;border:1px solid rgba(255,255,255,.08);cursor:pointer;background:#0b1220}
+.pics .cap{font-size:10.5px;color:#8fa3bf;margin-top:3px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.step{display:flex;gap:10px;margin-bottom:10px}
+.step .dot{flex:0 0 auto;width:20px;height:20px;border-radius:50%;background:#2f6fed;color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:700;margin-top:1px}
+.step .body{flex:1}
+.step .body .t{font-size:12.5px;color:#eef3fb;font-weight:600}
+.step .body .d{font-size:11.5px;color:#aab8cd;line-height:1.55;margin-top:2px}
+.step .body .d b{color:#ffb454}
+.overview{background:linear-gradient(135deg,#16304f,#0f1a2e);border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid rgba(255,255,255,.08)}
+.overview h2{font-size:14px;color:#fff;margin-bottom:6px}
+.overview p{font-size:12px;color:#b9c8dd;line-height:1.8}
+.pill{display:inline-block;background:rgba(47,111,237,.15);color:#7fb0ff;font-size:11px;padding:3px 10px;border-radius:20px;margin:3px 4px 0 0;border:1px solid rgba(47,111,237,.3)}
+.video-box{margin-bottom:14px}
+.video-box video{width:100%;border-radius:12px;background:#000;max-height:400px}
+.video-box .vt{font-size:12.5px;color:#fff;font-weight:600;margin:6px 2px}
+.lb{position:fixed;inset:0;background:rgba(0,0,0,.94);z-index:999;display:none;align-items:center;justify-content:center;flex-direction:column;padding:16px}
+.lb img{max-width:100%;max-height:86vh;border-radius:8px}
+.lb .lbx{position:absolute;top:16px;right:20px;color:#fff;font-size:26px;cursor:pointer}
+.lb .lbc{color:#8fa3bf;font-size:12px;margin-top:10px;text-align:center}
+.footer{position:fixed;bottom:0;left:0;right:0;background:rgba(11,18,32,.96);border-top:1px solid rgba(255,255,255,.06);padding:8px 12px;text-align:center;font-size:10px;color:#5f7188}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>购机通 · 门店操作总台</h1>
+  <div class="sub">门店与消费者操作指引 · 两个工作台一站式查看</div>
+</div>
+
+<div class="tabs">
+  <div class="tb on" id="tabB" onclick="sw('buhuo')">🛒 门店铺货操作<span class="en">铺货下单 · 收货 · 提现</span></div>
+  <div class="tb" id="tabX" onclick="sw('xiandai')">🏪 门店现货上架<span class="en">上架 · 下单 · 发货 · 结算</span></div>
+</div>
+
+<!-- ============ 面板一：门店铺货操作 ============ -->
+<div class="panel active" id="panel-buhuo">
+  <div class="mnav" id="mnav-buhuo">
+    <a href="#b1" class="on">开通钱包</a>
+    <a href="#b2">支付铺货</a>
+    <a href="#b3">确认收货</a>
+    <a href="#b4">钱包充值</a>
+    <a href="#b5">钱包提现</a>
+    <a href="#b6">销售发货</a>
+    <a href="#b7">录串码收货</a>
+    <a href="#b8">销售总览</a>
+  </div>
+
+  <div class="section" id="b1">
+    <div class="card">
+      <h2><span class="no">1</span>开通门店钱包</h2>
+      <div class="path">路径：购机通 → 我的 → 门店钱包</div>
+      <div class="hint"><span>← 左右滑动查看步骤 →</span></div>
+      <div class="swiper">
+        <div class="sc"><div class="no">第1步</div><img src="supplier-img4/mb01.png" onclick="lb(this,'在钱包页面点击【去开通】')"><div class="t">点击【去开通】</div><div class="d">进入<b>我的 → 门店钱包</b>，未开通的门店先开通，开通后可长期用于铺货订单支付</div></div>
+        <div class="sc"><div class="no">第2步</div><img src="supplier-img4/mb02.png" onclick="lb(this,'输入实名认证信息')"><div class="t">实名认证</div><div class="d">输入<b>公司名称、统一社会信用代码、法人姓名</b>等，点击【确认实名校验】</div></div>
+        <div class="sc"><div class="no">第3步</div><img src="supplier-img4/mb03.png" onclick="lb(this,'输入法人信息+银行账户信息')"><div class="t">填写账户信息</div><div class="d">输入<b>法人信息、银行账户、银行卡号、开户银行、银行联号、手机号</b>，点击【获取打款金额】</div></div>
+        <div class="sc"><div class="no">第4步</div><img src="supplier-img4/mb04.png" onclick="lb(this,'输入打款金额+验证码，点击绑定')"><div class="t">绑定完成</div><div class="d">输入<b>小额到账金额 + 短信验证码</b>，点击【绑定】即完成钱包开通</div></div>
+      </div>
+      <div class="warn">注意事项：① 企业账户仅支持<b>对公账户</b>；个体工商户可选对公或个人账户。② 充值需使用绑定的银行卡向指定账户转账。</div>
+    </div>
+  </div>
+
+  <div class="section" id="b2">
+    <div class="card">
+      <h2><span class="no">2</span>支付铺货订单</h2>
+      <div class="path">路径：购机通 → 我的 → 铺货订单</div>
+      <div class="hint"><span>← 左右滑动查看步骤 →</span></div>
+      <div class="swiper">
+        <div class="sc"><div class="no">第1步</div><img src="supplier-img4/mb05.png" onclick="lb(this,'找到待付款订单')"><div class="t">查看订单</div><div class="d">在铺货订单中找到<b>待付款</b>订单，点击【去支付】</div></div>
+        <div class="sc"><div class="no">第2步</div><img src="supplier-img4/mb06.png" onclick="lb(this,'选择订单商品并支付')"><div class="t">选择并支付</div><div class="d">选择需要支付的订单商品（可全选），点击<b>【去支付】</b>完成支付</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="b3">
+    <div class="card">
+      <h2><span class="no">3</span>铺货订单收货</h2>
+      <div class="path">路径：购机通 → 我的 → 铺货订单</div>
+      <div class="hint"><span>← 左右滑动查看步骤 →</span></div>
+      <div class="swiper">
+        <div class="sc"><div class="no">第1步</div><img src="supplier-img4/mb07.png" onclick="lb(this,'待收货订单-一键收货')"><div class="t">找到待收货订单</div><div class="d">在铺货订单中找到<b>待收货</b>订单，点击【一键收货】</div></div>
+        <div class="sc"><div class="no">第2步</div><img src="supplier-img4/mb08.png" onclick="lb(this,'确认收货弹窗')"><div class="t">确认收货</div><div class="d">点击【确定】按钮，完成收货</div></div>
+      </div>
+      <div class="tip">收货后可继续处理销售订单发货（见第6步）</div>
+    </div>
+  </div>
+
+  <div class="section" id="b4">
+    <div class="card">
+      <h2><span class="no">4</span>门店钱包充值</h2>
+      <div class="path">路径：购机通 → 我的 → 门店钱包</div>
+      <div class="hint"><span>← 左右滑动查看步骤 →</span></div>
+      <div class="swiper">
+        <div class="sc"><div class="no">第1步</div><img src="supplier-img4/mb09.png" onclick="lb(this,'钱包-充值按钮')"><div class="t">点击【充值】</div><div class="d">点击【充值】按钮，按提示使用<b>绑定的银行卡向指定账户打款</b>，等待充值完成</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="b5">
+    <div class="card">
+      <h2><span class="no">5</span>门店钱包提现</h2>
+      <div class="path">路径：购机通 → 我的 → 门店钱包</div>
+      <div class="hint"><span>← 左右滑动查看步骤 →</span></div>
+      <div class="swiper">
+        <div class="sc"><div class="no">第1步</div><img src="supplier-img4/mb10.png" onclick="lb(this,'提现-填写金额-提交')"><div class="t">点击【提现】并提交</div><div class="d">点击【提现】→ 填写<b>提现金额</b>（可全部提现）→ 点击【提交】，等待提现完成</div></div>
+      </div>
+      <div class="warn">提示：当前提现<b>不收取手续费</b>，仅可提现到绑定银行卡；银行卡冻结则提现失效；可在"我的银行卡"添加多张银行卡后提现（限非充值部分）。</div>
+    </div>
+  </div>
+
+  <div class="section" id="b6">
+    <div class="card">
+      <h2><span class="no">6</span>销售订单发货（快递）</h2>
+      <div class="path">路径：购机通 → 我的订单 → 待发货</div>
+      <div class="hint"><span>← 左右滑动查看步骤 →</span></div>
+      <div class="swiper">
+        <div class="sc"><div class="no">第1步</div><img src="supplier-img4/mb11.png" onclick="lb(this,'我的订单-待发货')"><div class="t">找到待发货订单</div><div class="d">消费者下单后，在<b>我的订单 → 待发货</b>中找到对应订单</div></div>
+        <div class="sc"><div class="no">第2步</div><img src="supplier-img4/mb12.png" onclick="lb(this,'提交SN码-69+SN+IMEI')"><div class="t">提交SN码</div><div class="d">填写<b>69码（实物须一致）+ SN码 + IMEI1 + IMEI2</b>，按提示完成快递发货</div></div>
+        <div class="sc"><div class="no">第3步</div><img src="supplier-img4/mb13.png" onclick="lb(this,'消费者确认收货')"><div class="t">等待收货</div><div class="d">消费者确认收货（或系统自动收货）后，订单完成</div></div>
+      </div>
+      <div class="warn">注意：铺货商品快递发货流程与门店自有商品相同，门店获利以<b>预计赚</b>形式计算利润；销售订单完成后请去<b>聚水潭审单</b>完成发货。</div>
+    </div>
+  </div>
+
+  <div class="section" id="b7">
+    <div class="card">
+      <h2><span class="no">7</span>确认收货（录入串码）</h2>
+      <div class="path">路径：购机通 → 我的 → 铺货订单</div>
+      <div class="hint"><span>← 左右滑动查看步骤 →</span></div>
+      <div class="swiper">
+        <div class="sc"><div class="no">第1步</div><img src="supplier-img4/mb14.png" onclick="lb(this,'核对商品规格-确认收货')"><div class="t">点击【确认收货】</div><div class="d">在铺货订单列表中找到发货商品，<b>核对商品规格</b>一致后点击【确认收货】</div></div>
+        <div class="sc"><div class="no">第2步</div><img src="supplier-img4/mb15.png" onclick="lb(this,'录入商品串码-确定')"><div class="t">录入串码</div><div class="d">录入商品串码后点击【确定】（支持<b>手动输入或扫码自动录入</b>）</div></div>
+      </div>
+      <div class="warn">提醒：省分需提前告知门店是录入<b>SN</b>还是录入<b>IMEI1</b>。</div>
+    </div>
+  </div>
+
+  <div class="section" id="b8">
+    <div class="card">
+      <h2><span class="no">8</span>销售流程总览</h2>
+      <div class="path">线上 & 到店两种销售场景</div>
+      <div class="hint"><span>← 左右滑动查看步骤 →</span></div>
+      <div class="swiper">
+        <div class="sc" style="flex-basis:92%"><div class="no">全流程</div><img src="supplier-img4/mb16.png" onclick="lb(this,'门店线上/到店销售流程总览')"><div class="t">销售场景流程</div><div class="d"><b>线上：</b>门店微信转发商品链接引导下单 → 完成业绩核算。<br><b>到店：</b>客户进店扫码 → 选品 → 下单 → 支付 → 商家派单及核销返利。</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 面板二：门店现货上架 ============ -->
+<div class="panel" id="panel-xiandai">
+  <div class="mnav" id="mnav-xiandai">
+    <a href="#x1" class="on">业务背景</a>
+    <a href="#x2">开通服务</a>
+    <a href="#x3">商品发布</a>
+    <a href="#x4">消费者下单</a>
+    <a href="#x5">门店发货</a>
+    <a href="#x6">货款结算</a>
+    <a href="#x7">退换货</a>
+    <a href="#x8">视频教程</a>
+  </div>
+
+  <div class="section" id="x1">
+    <div class="overview">
+      <h2>📌 门店自身货，也能在平台上销售</h2>
+      <p>门店盘点店内货品即可上架，消费者可直接走门店货源，帮助门店处理品牌压货、减少库存压力，平台也减少缺货流失。</p>
+      <div><span class="pill">① 门店入驻无仓，成为供应商</span><span class="pill">② 一般纳税人，可开13%发票</span><span class="pill">③ 同意先票后款</span></div>
+    </div>
+    <div class="card">
+      <h2><span class="no g">!</span>业务痛点</h2>
+      <p><span class="hl">平台缺货：</span>消费者问询时部分商品没上架，门店有货也只能流失商机。</p>
+      <p style="margin-top:6px"><span class="hl">门店压货：</span>品牌压货时门店希望先走压货商品，减少库存压力。</p>
+      <div class="warn">门店现货模式 = 把门店的货"上翻"到平台销售，实现双赢。</div>
+    </div>
+  </div>
+
+  <div class="section" id="x2">
+    <div class="card">
+      <h2><span class="no g">1</span>开通门店现货服务</h2>
+      <p>关键步骤：<span class="hl">【购机通门店入驻】+【开通门店现货服务】+【完成绑卡】</span></p>
+      <div style="height:8px"></div>
+      <div class="step"><div class="dot">1</div><div class="body"><div class="t">入驻【购机通】</div><div class="d"><b>务必选择企业入驻</b>并完成门店审核（主体须企业级 + 一般纳税人资质）</div></div></div>
+      <div class="pics"><div class="pic"><img src="supplier-img3/md01.png" onclick="lb(this,'入驻购机通：主体信息填写')"><div class="cap">① 入驻购机通（选企业）</div></div></div>
+      <div class="step"><div class="dot">2</div><div class="body"><div class="t">审核通过，点击【去开通】</div><div class="d">位置：<b>我的 → 现货出售 → 去开通</b></div></div></div>
+      <div class="pics"><div class="pic"><img src="supplier-img3/md02.png" onclick="lb(this,'我的页面：现货出售·去开通')"><div class="cap">② 去开通</div></div></div>
+      <div class="step"><div class="dot">3</div><div class="body"><div class="t">点击【立即开通】</div><div class="d">模式：<b>顾客购买 → 门店出货 → 生成结算单 → 上传发票 → 平台回款 → 签电子合同</b></div></div></div>
+      <div class="pics"><div class="pic"><img src="supplier-img3/md03.png" onclick="lb(this,'门店现货出售·模式介绍')"><div class="cap">③ 立即开通</div></div></div>
+      <div class="step"><div class="dot">4</div><div class="body"><div class="t">开通钱包</div><div class="d">填写<b>银行账户、银行卡号、开户银行、银行联号</b>等</div></div></div>
+      <div class="pics"><div class="pic"><img src="supplier-img3/md04.png" onclick="lb(this,'开通钱包：绑定银行卡')"><div class="cap">④ 开通钱包</div></div></div>
+      <div class="step"><div class="dot">5</div><div class="body"><div class="t">小额打款 + 验证码</div><div class="d">回填<b>小额到账金额 + 短信验证码</b>，点击【绑定】</div></div></div>
+      <div class="pics"><div class="pic"><img src="supplier-img3/md05.png" onclick="lb(this,'小额打款+验证码')"><div class="cap">⑤ 小额打款 → 绑定</div></div></div>
+      <div class="step"><div class="dot">6</div><div class="body"><div class="t">开通完成</div><div class="d">可自主发布现货商品；底部有<b>待出售 / 待开票 / 待结算 / 合同签署</b>选项卡</div></div></div>
+      <div class="pics"><div class="pic"><img src="supplier-img3/md06.png" onclick="lb(this,'开通完成')"><div class="cap">⑥ 开通完成</div></div></div>
+      <div class="tip">老客户：仅需开通门店现货服务即可，无需重复入驻。</div>
+    </div>
+  </div>
+
+  <div class="section" id="x3">
+    <div class="card">
+      <h2><span class="no g">2</span>商品发布</h2>
+      <p>关键要点：<span class="hl">【选品】+【维护零售价】+【配送方式】</span></p>
+      <div style="height:8px"></div>
+      <div class="step"><div class="dot">1</div><div class="body"><div class="t">点击【立即发布】</div></div></div>
+      <div class="pics"><div class="pic"><img src="supplier-img3/md07.png" onclick="lb(this,'门店现货商品·立即发布')"><div class="cap">① 立即发布</div></div></div>
+      <div class="step"><div class="dot">2</div><div class="body"><div class="t">选择需发布的商品</div></div></div>
+      <div class="pics"><div class="pic"><img src="supplier-img3/md08.png" onclick="lb(this,'选择需发布的商品')"><div class="cap">② 选择商品</div></div></div>
+      <div class="step"><div class="dot">3</div><div class="body"><div class="t">录入价格 + 库存 + 配送方式</div><div class="d">可开启<b>参与本地国补</b>；配送方式<b>至少支持一种</b>：到店自提 / 快递发货；<b>售后由门店自行承担</b></div></div></div>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img3/md09.png" onclick="lb(this,'录入价格+库存')"><div class="cap">③ 价格 + 库存</div></div>
+        <div class="pic"><img src="supplier-img3/md10.png" onclick="lb(this,'配送方式')"><div class="cap">③ 配送方式</div></div>
+      </div>
+      <div class="step"><div class="dot">4</div><div class="body"><div class="t">发布成功</div><div class="d">可直接<b>分享二维码</b>给消费者下单</div></div></div>
+      <div class="pics"><div class="pic"><img src="supplier-img3/md11.png" onclick="lb(this,'发布成功：分享二维码')"><div class="cap">④ 发布成功 · 扫码下单</div></div></div>
+      <div class="step"><div class="dot">5</div><div class="body"><div class="t">前台已有外展</div><div class="d">消费者也可在<b>前台搜索下单</b>（48小时内发货）</div></div></div>
+      <div class="pics"><div class="pic"><img src="supplier-img3/md12.png" onclick="lb(this,'前展页面')"><div class="cap">⑤ 前台外展</div></div></div>
+      <div class="warn"><b>价格规则：</b>门店只需维护【零售价】；平台服务费 = 零售价 × 5%（点位以省分规定为准）。<br><b>售后兜底：</b>成交货源为门店时，售后方为门店。</div>
+    </div>
+  </div>
+
+  <div class="section" id="x4">
+    <div class="card">
+      <h2><span class="no g">3</span>消费者下单（快递场景）</h2>
+      <p>可直接发给门店，用于引导消费者下单。</p>
+      <div style="height:8px"></div>
+      <div class="step"><div class="dot">1</div><div class="body"><div class="t">扫码进入门店选品</div><div class="d">页面展示<b>国家补贴</b>标识与国补后预估价格</div></div></div>
+      <div class="pics"><div class="pic"><img src="supplier-img3/md13.png" onclick="lb(this,'扫码进入门店选品')"><div class="cap">① 扫码选品</div></div></div>
+      <div class="step"><div class="dot">2</div><div class="body"><div class="t">实名认证 + 提交订单</div><div class="d"><b>48小时内发货</b>提示</div></div></div>
+      <div class="pics"><div class="pic"><img src="supplier-img3/md14.png" onclick="lb(this,'实名认证+提交订单')"><div class="cap">② 实名认证 + 提交</div></div></div>
+      <div class="step"><div class="dot">3</div><div class="body"><div class="t">选云闪付付款</div><div class="d">支付方式选<b>云闪付（享政府补贴）</b></div></div></div>
+      <div class="pics"><div class="pic"><img src="supplier-img3/md15.png" onclick="lb(this,'选云闪付付款')"><div class="cap">③ 云闪付付款</div></div></div>
+      <div class="step"><div class="dot">4</div><div class="body"><div class="t">支付</div><div class="d">支付成功，显示国补后实付金额</div></div></div>
+      <div class="pics"><div class="pic"><img src="supplier-img3/md16.png" onclick="lb(this,'支付成功')"><div class="cap">④ 支付成功</div></div></div>
+      <div class="step"><div class="dot">5</div><div class="body"><div class="t">下单完成</div><div class="d"><b>有退款场景可再次申请</b></div></div></div>
+      <div class="pics"><div class="pic"><img src="supplier-img3/md17.png" onclick="lb(this,'下单完成')"><div class="cap">⑤ 下单完成</div></div></div>
+    </div>
+  </div>
+
+  <div class="section" id="x5">
+    <div class="card">
+      <h2><span class="no g">4</span>门店发货（快递场景）</h2>
+      <div style="height:8px"></div>
+      <div class="step"><div class="dot">1</div><div class="body"><div class="t">我的订单 → 待发货 → 立即发货</div></div></div>
+      <div class="pics"><div class="pic"><img src="supplier-img3/md18.png" onclick="lb(this,'我的订单·待发货')"><div class="cap">① 立即发货</div></div></div>
+      <div class="step"><div class="dot">2</div><div class="body"><div class="t">上传商品信息：69 + SN + IMEI1/2</div><div class="d"><b>SN占用成功后</b>才可预约顺丰</div></div></div>
+      <div class="pics"><div class="pic"><img src="supplier-img3/md19.png" onclick="lb(this,'提交SN码')"><div class="cap">② 上传商品信息</div></div></div>
+      <div class="step"><div class="dot">3</div><div class="body"><div class="t">预约顺丰 → 确认发货</div></div></div>
+      <div class="pics"><div class="pic"><img src="supplier-img3/md20.png" onclick="lb(this,'预约顺丰·确认发货')"><div class="cap">③ 预约顺丰 → 确认</div></div></div>
+      <div class="step"><div class="dot">4</div><div class="body"><div class="t">发货成功</div></div></div>
+      <div class="pics"><div class="pic"><img src="supplier-img3/md21.png" onclick="lb(this,'发货成功')"><div class="cap">④ 发货成功</div></div></div>
+    </div>
+  </div>
+
+  <div class="section" id="x6">
+    <div class="card">
+      <h2><span class="no g">5</span>货款结算 · 每个商品赚多少</h2>
+      <p><span class="hl">发布时即可知晓每单收入。</span>示例：零售价 2699 元 → 国补价 2294.15 元 → 门店预计收入 2564 元 → 平台服务费 135 元。</p>
+      <div class="pics"><div class="pic"><img src="supplier-img3/md22.png" onclick="lb(this,'发布时收入预览')"><div class="cap">发布时收入预览</div></div></div>
+      <div class="warn"><b>规则：</b>门店录入零售价即可，平台服务费按<b>零售价 × 5%</b>自动算出；押金（可退）= 国补订单质押<b>国补款 × 10%</b>，待国补回款后退还。</div>
+    </div>
+    <div class="card">
+      <h2><span class="no g">6</span>提现步骤1：上传发票</h2>
+      <p>遵循<b>先票后款</b>：位置 <span class="hl">【我的】→【现货出售】→【待开票】→ 对应用品【上传发票】</span></p>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img3/md23.png" onclick="lb(this,'我的页面·待开票')"><div class="cap">待开票入口</div></div>
+        <div class="pic"><img src="supplier-img3/md24.png" onclick="lb(this,'待开票列表')"><div class="cap">待开票列表</div></div>
+        <div class="pic"><img src="supplier-img3/md25.png" onclick="lb(this,'上传发票')"><div class="cap">上传发票</div></div>
+        <div class="pic"><img src="supplier-img3/md26.png" onclick="lb(this,'上传成功')"><div class="cap">上传成功</div></div>
+      </div>
+      <p style="margin-top:8px">支持<b>批量开票</b>：勾选订单 → 开票 → 上传发票。</p>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img3/md27.png" onclick="lb(this,'批量开票')"><div class="cap">批量开票</div></div>
+        <div class="pic"><img src="supplier-img3/md28.png" onclick="lb(this,'上传发票弹窗')"><div class="cap">点击上传发票</div></div>
+      </div>
+      <div class="tip"><b>注：</b>开票金额为实际货款，<b>包含押金金额</b>。已开票可查：<b>已开票 → 查看发票</b></div>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img3/md29.png" onclick="lb(this,'已开票')"><div class="cap">已开票</div></div>
+        <div class="pic"><img src="supplier-img3/md30.png" onclick="lb(this,'查看发票')"><div class="cap">查看发票</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2><span class="no g">7</span>提现步骤2：签约PO协议</h2>
+      <p><span class="hl">【先认证】</span>先进行<b>法大大认证</b>——盖电子章的前提条件。</p>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img3/md31.png" onclick="lb(this,'现货出售')"><div class="cap">现货出售</div></div>
+        <div class="pic"><img src="supplier-img3/md32.png" onclick="lb(this,'实名认证')"><div class="cap">实名认证</div></div>
+        <div class="pic"><img src="supplier-img3/md33.png" onclick="lb(this,'前往认证')"><div class="cap">前往认证</div></div>
+        <div class="pic"><img src="supplier-img3/md34.png" onclick="lb(this,'多合一营业执照')"><div class="cap">多合一营业执照</div></div>
+        <div class="pic"><img src="supplier-img3/md35.png" onclick="lb(this,'认证成功')"><div class="cap">认证成功</div></div>
+      </div>
+      <p style="margin-top:8px"><span class="hl">【签协议】</span>法大大认证成功后签署<b>框架合同</b>（无仓平台采购框架合同）。</p>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img3/md36.png" onclick="lb(this,'待签署协议')"><div class="cap">待签署协议</div></div>
+        <div class="pic"><img src="supplier-img3/md37.png" onclick="lb(this,'签署文件')"><div class="cap">签署文件</div></div>
+        <div class="pic"><img src="supplier-img3/md38.png" onclick="lb(this,'盖电子章')"><div class="cap">盖电子章</div></div>
+        <div class="pic"><img src="supplier-img3/md39.png" onclick="lb(this,'验证码')"><div class="cap">验证码</div></div>
+        <div class="pic"><img src="supplier-img3/md40.png" onclick="lb(this,'已签署')"><div class="cap">已签署</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2><span class="no g">8</span>等待财务排款</h2>
+      <p><b>操作动作：</b></p>
+      <p>① 【待开票】查看货款结算单金额，开具发票并上传</p>
+      <p>② 上传发票后，结算方才可回款</p>
+      <p>③ 每月 <span class="hl">11号、21号、26号</span>根据已结算订单生成电子采销合同，须签署</p>
+      <div class="warn"><b>回款时效（T 工作日）：</b><br>① T 日 10:00 前上传发票 → <b>T+1 回款</b>（不含节假日）<br>② T 日 10:00 后上传发票 → <b>T+2 回款</b>（不含节假日）</div>
+    </div>
+  </div>
+
+  <div class="section" id="x7">
+    <div class="card">
+      <h2><span class="no g">!</span>逆向订单流程（退换货）</h2>
+      <p>门店需要<b>确认是否同意退货并完成退货签收</b>，同意后按工具操作执行。</p>
+      <div class="warn">关键动作：确认同意退货 → 完成退货签收。</div>
+      <div class="tip"><b>关联文档：</b>《门店现货上架--门店版本》可直接转发给门店作为操作指引。</div>
+      <div class="tip"><b>山西关联：</b>快递发货模式 + 门店货；门店分享时选择<b>有门店库存标识</b>的商品链接引导下单；门店自提（门店出货+激活、消费者到店下单+提货）。</div>
+    </div>
+  </div>
+
+  <div class="section" id="x8">
+    <div class="card">
+      <h2><span class="no g">▶</span>视频教程</h2>
+      <p style="margin-bottom:10px">完整操作演示，按场景选择观看。</p>
+      <div class="video-box"><video controls preload="none"><source src="videos3/mendian_shijiao.mp4" type="video/mp4"></video><div class="vt">【门店自提】门店视角 · 门店上架</div></div>
+      <div class="video-box"><video controls preload="none"><source src="videos3/mendian_xiaofeizhe.mp4" type="video/mp4"></video><div class="vt">【门店自提】消费者视角 · 门店上架</div></div>
+      <div class="video-box"><video controls preload="none"><source src="videos3/kuaidi_moshi.mp4" type="video/mp4"></video><div class="vt">【快递发货】门店视角 · 门店上架</div></div>
+      <div class="video-box"><video controls preload="none"><source src="videos3/xiaofeizhe_xiadan.mp4" type="video/mp4"></video><div class="vt">【快递发货】消费者如何下单</div></div>
+      <div class="warn">注意：视频中的服务费点位仅为<b>举例</b>，具体以各省规定为主。</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">数据来源：飞书《购机通-门店铺货SOP》《门店现货上架--对内文档》 · 购机通</div>
+
+<div class="lb" id="lb" onclick="if(event.target===this)closeLb()">
+  <span class="lbx" onclick="closeLb()">✕</span>
+  <img id="lbImg" src="">
+  <div class="lbc" id="lbCap"></div>
+</div>
+
+<script>
+function lb(img,cap){var d=document.getElementById('lb');d.style.display='flex';document.getElementById('lbImg').src=img.src;document.getElementById('lbCap').textContent=cap||'';document.body.style.overflow='hidden'}
+function closeLb(){document.getElementById('lb').style.display='none';document.body.style.overflow=''}
+function sw(name){
+  var buhuo=name==='buhuo';
+  document.getElementById('tabB').className='tb'+(buhuo?' on':'');
+  document.getElementById('tabX').className='tb'+(buhuo?'':' on');
+  document.getElementById('panel-buhuo').className='panel'+(buhuo?' active':'');
+  document.getElementById('panel-xiandai').className='panel'+(buhuo?'':' active');
+  if(buhuo)scrollTo(0,70);else scrollTo(0,70);
+}
+</script>
+</body>
+</html>
