@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>购机通 · 门店铺货操作</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#0b1220;color:#e8ecf4;min-height:100vh;padding-bottom:70px}
+.header{position:sticky;top:0;z-index:100;background:linear-gradient(135deg,#0f1a2e,#14263f);padding:14px 14px 10px;border-bottom:1px solid rgba(255,255,255,.06)}
+.header h1{font-size:17px;font-weight:700;color:#fff}
+.header .sub{font-size:11px;color:#8fa3bf;margin-top:3px}
+.nav{position:sticky;top:59px;z-index:99;background:rgba(11,18,32,.92);padding:8px 10px;display:flex;gap:7px;overflow-x:auto;white-space:nowrap;border-bottom:1px solid rgba(255,255,255,.05);scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{flex:0 0 auto;padding:5px 13px;border-radius:18px;background:#172236;color:#b9c8dd;font-size:12px;text-decoration:none}
+.nav a.on{background:#2f6fed;color:#fff;font-weight:600}
+.section{padding:14px 14px 4px;scroll-margin-top:118px}
+.card{background:#101c30;border-radius:14px;padding:14px;margin-bottom:12px;border:1px solid rgba(255,255,255,.05)}
+.card h2{font-size:14px;color:#fff;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.card h2 .no{background:#2f6fed;color:#fff;width:20px;height:20px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;flex:0 0 auto}
+.card .path{font-size:11px;color:#7fb0ff;margin:2px 0 10px;background:rgba(47,111,237,.08);display:inline-block;padding:3px 8px;border-radius:6px}
+.card .warn{background:rgba(255,180,84,.08);border-left:3px solid #ffb454;padding:7px 9px;border-radius:6px;font-size:11.5px;color:#ffd9a0;margin-top:10px;line-height:1.6}
+.card .tip{background:rgba(47,111,237,.08);border-left:3px solid #2f6fed;padding:7px 9px;border-radius:6px;font-size:11.5px;color:#a9c6f5;margin-top:8px;line-height:1.6}
+/* 横向滑动步骤组 */
+.swiper{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px 12px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.swiper::-webkit-scrollbar{display:none}
+.swiper .sc{flex:0 0 74%;scroll-snap-align:start;background:#15223a;border-radius:12px;padding:12px;border:1px solid rgba(255,255,255,.07)}
+.swiper .sc .no{display:inline-flex;align-items:center;justify-content:center;background:#2f6fed;color:#fff;min-width:20px;height:20px;border-radius:10px;font-size:11px;font-weight:700;padding:0 6px;margin-bottom:8px}
+.swiper .sc img{width:100%;border-radius:9px;border:1px solid rgba(255,255,255,.08);cursor:pointer;background:#0b1220;max-height:340px;object-fit:contain}
+.swiper .sc .t{font-size:12.5px;color:#fff;font-weight:600;margin-top:8px}
+.swiper .sc .d{font-size:11.5px;color:#aab8cd;line-height:1.6;margin-top:3px}
+.swiper .sc .d b{color:#ffb454}
+.hint{display:flex;align-items:center;gap:6px;font-size:10.5px;color:#5f7188;margin:0 0 8px}
+.hint::before,.hint::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.08)}
+.hint span{flex:0 0 auto}
+.lb{position:fixed;inset:0;background:rgba(0,0,0,.94);z-index:999;display:none;align-items:center;justify-content:center;flex-direction:column;padding:16px}
+.lb img{max-width:100%;max-height:86vh;border-radius:8px}
+.lb .lbx{position:absolute;top:16px;right:20px;color:#fff;font-size:26px;cursor:pointer}
+.lb .lbc{color:#8fa3bf;font-size:12px;margin-top:10px;text-align:center}
+.footer{position:fixed;bottom:0;left:0;right:0;background:rgba(11,18,32,.96);border-top:1px solid rgba(255,255,255,.06);padding:8px 12px;text-align:center;font-size:10px;color:#5f7188}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>购机通 · 门店铺货操作</h1>
+  <div class="sub">门店操作指引 · 省分公司已铺货，门店按下述步骤操作</div>
+</div>
+
+<div class="nav">
+  <a href="#s1" class="on">开通钱包</a>
+  <a href="#s2">支付铺货</a>
+  <a href="#s3">确认收货</a>
+  <a href="#s4">钱包充值</a>
+  <a href="#s5">钱包提现</a>
+  <a href="#s6">销售发货</a>
+  <a href="#s7">录串码收货</a>
+  <a href="#s8">销售总览</a>
+</div>
+
+<!-- 1 开通钱包 -->
+<div class="section" id="s1">
+  <div class="card">
+    <h2><span class="no">1</span>开通门店钱包</h2>
+    <div class="path">路径：购机通 → 我的 → 门店钱包</div>
+    <div class="hint"><span>← 左右滑动查看步骤 →</span></div>
+    <div class="swiper">
+      <div class="sc"><div class="no">第1步</div><img src="supplier-img4/mb01.png" onclick="lb(this,'在钱包页面点击【去开通】')"><div class="t">点击【去开通】</div><div class="d">进入<b>我的 → 门店钱包</b>，未开通钱包的门店先开通，开通后可长期用于铺货订单支付</div></div>
+      <div class="sc"><div class="no">第2步</div><img src="supplier-img4/mb02.png" onclick="lb(this,'输入实名认证信息')"><div class="t">实名认证</div><div class="d">输入<b>公司名称、统一社会信用代码、法人姓名</b>等，点击【确认实名校验】，校验通过即完成实名认证</div></div>
+      <div class="sc"><div class="no">第3步</div><img src="supplier-img4/mb03.png" onclick="lb(this,'输入法人信息+银行账户信息')"><div class="t">填写账户信息</div><div class="d">输入<b>法人信息、银行账户、银行卡号、开户银行、银行联号、手机号</b>，点击【获取打款金额】</div></div>
+      <div class="sc"><div class="no">第4步</div><img src="supplier-img4/mb04.png" onclick="lb(this,'输入打款金额+验证码，点击绑定')"><div class="t">绑定完成</div><div class="d">输入<b>小额到账金额 + 短信验证码</b>，点击【绑定】即完成钱包开通</div></div>
+    </div>
+    <div class="warn">注意事项：① 企业账户仅支持<b>对公账户</b>；个体工商户可选对公或个人账户。② 充值需使用绑定的银行卡向指定账户转账。</div>
+  </div>
+</div>
+
+<!-- 2 支付铺货 -->
+<div class="section" id="s2">
+  <div class="card">
+    <h2><span class="no">2</span>支付铺货订单</h2>
+    <div class="path">路径：购机通 → 我的 → 铺货订单</div>
+    <div class="hint"><span>← 左右滑动查看步骤 →</span></div>
+    <div class="swiper">
+      <div class="sc"><div class="no">第1步</div><img src="supplier-img4/mb05.png" onclick="lb(this,'找到待付款订单')"><div class="t">查看订单</div><div class="d">在铺货订单中找到<b>待付款</b>订单，点击【去支付】</div></div>
+      <div class="sc"><div class="no">第2步</div><img src="supplier-img4/mb06.png" onclick="lb(this,'选择订单商品并支付')"><div class="t">绑定银行卡并支付</div><div class="d">选择需要支付的订单商品（可全选），点击<b>【去支付】</b>完成支付</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 3 确认收货 -->
+<div class="section" id="s3">
+  <div class="card">
+    <h2><span class="no">3</span>铺货订单收货</h2>
+    <div class="path">路径：购机通 → 我的 → 铺货订单</div>
+    <div class="hint"><span>← 左右滑动查看步骤 →</span></div>
+    <div class="swiper">
+      <div class="sc"><div class="no">第1步</div><img src="supplier-img4/mb07.png" onclick="lb(this,'待收货订单-一键收货')"><div class="t">找到待收货订单</div><div class="d">在铺货订单中找到<b>待收货</b>订单，点击【一键收货】</div></div>
+      <div class="sc"><div class="no">第2步</div><img src="supplier-img4/mb08.png" onclick="lb(this,'确认收货弹窗')"><div class="t">确认收货</div><div class="d">点击【确定】按钮，完成收货</div></div>
+    </div>
+    <div class="tip">收货后可继续处理销售订单发货（见下方第6步）</div>
+  </div>
+</div>
+
+<!-- 4 钱包充值 -->
+<div class="section" id="s4">
+  <div class="card">
+    <h2><span class="no">4</span>门店钱包充值</h2>
+    <div class="path">路径：购机通 → 我的 → 门店钱包</div>
+    <div class="hint"><span>← 左右滑动查看步骤 →</span></div>
+    <div class="swiper">
+      <div class="sc"><div class="no">第1步</div><img src="supplier-img4/mb09.png" onclick="lb(this,'钱包-充值按钮')"><div class="t">点击【充值】</div><div class="d">点击【充值】按钮，按提示使用<b>绑定的银行卡向指定账户打款</b>，等待充值完成</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 5 钱包提现 -->
+<div class="section" id="s5">
+  <div class="card">
+    <h2><span class="no">5</span>门店钱包提现</h2>
+    <div class="path">路径：购机通 → 我的 → 门店钱包</div>
+    <div class="hint"><span>← 左右滑动查看步骤 →</span></div>
+    <div class="swiper">
+      <div class="sc"><div class="no">第1步</div><img src="supplier-img4/mb10.png" onclick="lb(this,'提现-填写金额-提交')"><div class="t">点击【提现】并提交</div><div class="d">点击【提现】→ 填写<b>提现金额</b>（可全部提现）→ 点击【提交】，等待提现完成</div></div>
+    </div>
+    <div class="warn">提示：当前提现<b>不收取手续费</b>，仅可提现到绑定银行卡；银行卡冻结则提现失效；可在"我的银行卡"添加多张银行卡后提现（限非充值部分）。</div>
+  </div>
+</div>
+
+<!-- 6 销售发货 -->
+<div class="section" id="s6">
+  <div class="card">
+    <h2><span class="no">6</span>销售订单发货（快递）</h2>
+    <div class="path">路径：购机通 → 我的订单 → 待发货</div>
+    <div class="hint"><span>← 左右滑动查看步骤 →</span></div>
+    <div class="swiper">
+      <div class="sc"><div class="no">第1步</div><img src="supplier-img4/mb11.png" onclick="lb(this,'我的订单-待发货')"><div class="t">找到待发货订单</div><div class="d">消费者下单后，在<b>我的订单 → 待发货</b>中找到对应订单</div></div>
+      <div class="sc"><div class="no">第2步</div><img src="supplier-img4/mb12.png" onclick="lb(this,'提交SN码-69+SN+IMEI')"><div class="t">提交SN码</div><div class="d">填写<b>69码（实物须一致）+ SN码 + IMEI1 + IMEI2</b>，按提示完成快递发货</div></div>
+      <div class="sc"><div class="no">第3步</div><img src="supplier-img4/mb13.png" onclick="lb(this,'消费者确认收货')"><div class="t">等待收货</div><div class="d">消费者在购机通确认收货（或系统自动收货）后，订单完成</div></div>
+    </div>
+    <div class="warn">注意：铺货商品快递发货的销售流程与门店自有商品相同，区别在于门店获利以<b>预计赚</b>的形式计算利润；销售订单完成后，请去<b>聚水潭审单</b>完成发货。</div>
+  </div>
+</div>
+
+<!-- 7 录串码收货 -->
+<div class="section" id="s7">
+  <div class="card">
+    <h2><span class="no">7</span>铺货商品确认收货（录入串码）</h2>
+    <div class="path">路径：购机通 → 我的 → 铺货订单</div>
+    <div class="hint"><span>← 左右滑动查看步骤 →</span></div>
+    <div class="swiper">
+      <div class="sc"><div class="no">第1步</div><img src="supplier-img4/mb14.png" onclick="lb(this,'核对商品规格-确认收货')"><div class="t">点击【确认收货】</div><div class="d">在铺货订单列表中找到发货商品，<b>核对商品规格</b>一致后点击【确认收货】</div></div>
+      <div class="sc"><div class="no">第2步</div><img src="supplier-img4/mb15.png" onclick="lb(this,'录入商品串码-确定')"><div class="t">录入串码</div><div class="d">录入商品串码后点击【确定】（支持<b>手动输入或扫码自动录入</b>）</div></div>
+    </div>
+    <div class="warn">提醒：同步门店操作前，省分需提前告知门店是录入<b>SN</b>还是录入<b>IMEI1</b>。</div>
+  </div>
+</div>
+
+<!-- 8 销售总览 -->
+<div class="section" id="s8">
+  <div class="card">
+    <h2><span class="no">8</span>销售流程总览</h2>
+    <div class="path">线上 & 到店两种销售场景</div>
+    <div class="hint"><span>← 左右滑动查看步骤 →</span></div>
+    <div class="swiper">
+      <div class="sc" style="flex-basis:92%"><div class="no">全流程</div><img src="supplier-img4/mb16.png" onclick="lb(this,'门店线上/到店销售流程总览')"><div class="t">销售场景流程</div><div class="d"><b>线上：</b>门店微信转发商品链接引导下单 → 完成业绩核算。<br><b>到店：</b>客户进店扫码 → 选品 → 下单 → 支付 → 商家派单及核销返利。</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">数据来源：飞书《购机通-门店铺货SOP》· 购机通</div>
+
+<div class="lb" id="lb" onclick="if(event.target===this)closeLb()">
+  <span class="lbx" onclick="closeLb()">✕</span>
+  <img id="lbImg" src="">
+  <div class="lbc" id="lbCap"></div>
+</div>
+
+<script>
+function lb(img,cap){var d=document.getElementById('lb');d.style.display='flex';document.getElementById('lbImg').src=img.src;document.getElementById('lbCap').textContent=cap||'';document.body.style.overflow='hidden'}
+function closeLb(){document.getElementById('lb').style.display='none';document.body.style.overflow=''}
+var navs=document.querySelectorAll('.nav a');
+function onScroll(){
+  var y=window.scrollY+125,cur='s1';
+  ['s1','s2','s3','s4','s5','s6','s7','s8'].forEach(function(id){var el=document.getElementById(id);if(el&&el.offsetTop<=y)cur=id});
+  navs.forEach(function(a){a.className=a.getAttribute('href')==='#'+cur?'on':''});
+}
+window.addEventListener('scroll',onScroll);
+onScroll();
+</script>
+</body>
+</html>
