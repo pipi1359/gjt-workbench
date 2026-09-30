@@ -11,8 +11,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 .header h1{font-size:18px;font-weight:700;color:#fff;letter-spacing:.5px}
 .header .sub{font-size:11px;color:#8fa3bf;margin-top:3px}
 /* 主 Tab 切换 */
-.tabs{position:sticky;top:70px;z-index:99;background:rgba(11,18,32,.95);padding:9px 12px;display:flex;gap:10px;border-bottom:1px solid rgba(255,255,255,.05)}
-.tabs .tb{flex:1;text-align:center;padding:10px 6px;border-radius:12px;background:#172236;color:#b9c8dd;font-size:13px;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,.06)}
+.tabs{position:sticky;top:70px;z-index:99;background:rgba(11,18,32,.95);padding:9px 12px;display:flex;gap:8px;border-bottom:1px solid rgba(255,255,255,.05)}
+.tabs .tb{flex:1;text-align:center;padding:10px 4px;border-radius:12px;background:#172236;color:#b9c8dd;font-size:12.5px;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,.06)}
 .tabs .tb.on{background:linear-gradient(135deg,#2f6fed,#4f8dff);color:#fff;border-color:transparent;box-shadow:0 2px 10px rgba(47,111,237,.35)}
 .tabs .tb .en{display:block;font-size:9px;color:#8fa3bf;margin-top:2px;font-weight:400}
 .tabs .tb.on .en{color:#d5e3ff}
@@ -29,6 +29,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 .card h2 .no{background:#2f6fed;color:#fff;width:20px;height:20px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;flex:0 0 auto}
 .card h2 .no.g{background:#1b8a5a}
 .card h2 .no.o{background:#e08a2e}
+.card h2 .no.p{background:#8a4fe0}
 .card .path{font-size:11px;color:#7fb0ff;margin:2px 0 10px;background:rgba(47,111,237,.08);display:inline-block;padding:3px 8px;border-radius:6px}
 .card p{font-size:12.5px;line-height:1.7;color:#c6d2e4}
 .card .hl{color:#ffb454;font-weight:600}
@@ -46,13 +47,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 .hint{display:flex;align-items:center;gap:6px;font-size:10.5px;color:#5f7188;margin:0 0 8px}
 .hint::before,.hint::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.08)}
 .hint span{flex:0 0 auto}
-/* 门店现货图片两列网格 */
+/* 图片两列网格 */
 .pics{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:8px}
 .pics .pic{width:100%}
 .pics img{width:100%;height:auto;max-height:250px;object-fit:contain;border-radius:8px;border:1px solid rgba(255,255,255,.08);cursor:pointer;background:#0b1220}
 .pics .cap{font-size:10.5px;color:#8fa3bf;margin-top:3px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .step{display:flex;gap:10px;margin-bottom:10px}
 .step .dot{flex:0 0 auto;width:20px;height:20px;border-radius:50%;background:#2f6fed;color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:700;margin-top:1px}
+.step .dot.o{background:#e08a2e}
+.step .dot.p{background:#8a4fe0}
 .step .body{flex:1}
 .step .body .t{font-size:12.5px;color:#eef3fb;font-weight:600}
 .step .body .d{font-size:11.5px;color:#aab8cd;line-height:1.55;margin-top:2px}
@@ -69,18 +72,28 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 .lb .lbx{position:absolute;top:16px;right:20px;color:#fff;font-size:26px;cursor:pointer}
 .lb .lbc{color:#8fa3bf;font-size:12px;margin-top:10px;text-align:center}
 .footer{position:fixed;bottom:0;left:0;right:0;background:rgba(11,18,32,.96);border-top:1px solid rgba(255,255,255,.06);padding:8px 12px;text-align:center;font-size:10px;color:#5f7188}
+/* 编辑模式 */
+.editfab{position:fixed;right:14px;bottom:60px;z-index:300;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#e08a2e,#ffb454);color:#fff;font-size:19px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(224,138,46,.45);border:none}
+.editpanel{position:fixed;left:10px;right:10px;bottom:12px;z-index:301;background:#15223a;border:1px solid rgba(255,180,84,.4);border-radius:14px;padding:12px;display:none;flex-direction:column;gap:8px;box-shadow:0 -6px 24px rgba(0,0,0,.45)}
+.editpanel .ept{font-size:11px;color:#ffd9a0;text-align:center;margin-bottom:2px}
+.editpanel button{padding:11px;border-radius:10px;border:none;font-size:13px;font-weight:600;cursor:pointer}
+.editpanel .s{background:linear-gradient(135deg,#2f6fed,#4f8dff);color:#fff}
+.editpanel .e{background:#1b8a5a;color:#fff}
+.editpanel .c{background:#172236;color:#b9c8dd;border:1px solid rgba(255,255,255,.1)}
+[contenteditable="true"]{outline:1px dashed rgba(255,180,84,.7)!important;outline-offset:2px;border-radius:4px;cursor:text;min-height:1em;background:rgba(255,180,84,.04)}
 </style>
 </head>
 <body>
-
+<div id="root">
 <div class="header">
   <h1>购机通 · 门店操作总台</h1>
-  <div class="sub">门店与消费者操作指引 · 两个工作台一站式查看</div>
+  <div class="sub">门店与消费者操作指引 · 三个工作台一站式查看（点右下角 ✏️ 可编辑文字）</div>
 </div>
 
 <div class="tabs">
   <div class="tb on" id="tabB" onclick="sw('buhuo')">🛒 门店铺货操作<span class="en">铺货下单 · 收货 · 提现</span></div>
   <div class="tb" id="tabX" onclick="sw('xiandai')">🏪 门店现货上架<span class="en">上架 · 下单 · 发货 · 结算</span></div>
+  <div class="tb" id="tabF" onclick="sw('fenxiao')">📦 分销进货<span class="en">卖家上架 · 门店进货</span></div>
 </div>
 
 <!-- ============ 面板一：门店铺货操作 ============ -->
@@ -427,7 +440,135 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
   </div>
 </div>
 
-<div class="footer">数据来源：飞书《购机通-门店铺货SOP》《门店现货上架--对内文档》 · 购机通</div>
+<!-- ============ 面板三：分销进货 ============ -->
+<div class="panel" id="panel-fenxiao">
+  <div class="mnav" id="mnav-fenxiao">
+    <a href="#f0" class="on">业务总览</a>
+    <a href="#f1">卖家上架·注册认证</a>
+    <a href="#f2">卖家上架·铺商品</a>
+    <a href="#f3">卖家发货</a>
+    <a href="#f4">门店入驻</a>
+    <a href="#f5">门店进货下单</a>
+    <a href="#f6">库存下单+规则</a>
+  </div>
+
+  <div class="section" id="f0">
+    <div class="overview">
+      <h2>📦 分销进货：卖家上架 → 门店进货</h2>
+      <p>省分公司/外部商（卖家）在<b>市场助手</b>上架商品报价，门店在<b>购机通【进货】</b>入口选品下单，完成进货交易。2026年1月8日起，<b>【进货】已兼容到【库存】模块</b>。</p>
+      <div><span class="pill">卖家上架</span><span class="pill">门店选品</span><span class="pill">平安钱包支付</span><span class="pill">卖家发货/收货</span><span class="pill">服务费=卖家千分之2</span></div>
+    </div>
+  </div>
+
+  <div class="section" id="f1">
+    <div class="card">
+      <h2><span class="no p">1</span>卖家上架 · 先注册+认证</h2>
+      <p>操作端：<span class="hl">市场助手（醒市）</span>，支持手机端和PC端。</p>
+      <div style="height:8px"></div>
+      <div class="step"><div class="dot">1</div><div class="body"><div class="t">登录/注册新主体</div><div class="d">点击【注册新主体】；<b>如已有主体也可直接选择对应主体</b></div></div></div>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img6/fx01.png" onclick="lb(this,'市场助手登录：选择主体/注册新主体')"><div class="cap">① 登录 · 注册新主体</div></div>
+        <div class="pic"><img src="supplier-img6/fx02.png" onclick="lb(this,'注册：企业/个体工商户·填写信息·确认注册')"><div class="cap">② 填写信息 · 确认注册</div></div>
+      </div>
+      <div class="step"><div class="dot">2</div><div class="body"><div class="t">实名认证</div><div class="d">点击<b>【我的】→【去开通】</b>跳转实名核验，填写<b>统一社会信用代码、法人姓名、法人身份证号</b>，点击【确认实名核验】</div></div></div>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img6/fx03.png" onclick="lb(this,'我的→去开通（尚未开通钱包）')"><div class="cap">③ 我的 → 去开通</div></div>
+        <div class="pic"><img src="supplier-img6/fx04.png" onclick="lb(this,'实名认证：填写信用代码/法人/身份证')"><div class="cap">④ 实名核验</div></div>
+      </div>
+      <div class="step"><div class="dot">3</div><div class="body"><div class="t">开通平安钱包</div><div class="d"><b>企业级：</b>选对公账户，填写账户名称/银行账户/开户银行/银行联号 → 获取打款金额 → 回填小额到款金额 + 短信验证码 → 绑定。<br><b>个体户：</b>可选个人银行卡（法人）或对公账户 → 绑定。<br><b>个人：</b>录入信息 → 实名认证 → 小额打款 + 验证码开通。</div></div></div>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img6/fx05.png" onclick="lb(this,'开通平安钱包：企业-对公账户')"><div class="cap">⑤ 平安钱包（企业对公）</div></div>
+        <div class="pic"><img src="supplier-img6/fx06.png" onclick="lb(this,'小额打款+短信验证码·绑定')"><div class="cap">⑥ 小额打款 → 绑定</div></div>
+        <div class="pic"><img src="supplier-img6/fx07.png" onclick="lb(this,'绑定成功')"><div class="cap">⑦ 绑定成功</div></div>
+      </div>
+      <div class="tip">恭喜完成登录和注册环节，快去发布商品。</div>
+    </div>
+  </div>
+
+  <div class="section" id="f2">
+    <div class="card">
+      <h2><span class="no p">2</span>卖家上架 · 铺商品</h2>
+      <p>两种方式：<span class="hl">①手机端随时上架</span> ②<span class="hl">PC端批量导入（省时省力）</span></p>
+      <div style="height:8px"></div>
+      <div class="step"><div class="dot">1</div><div class="body"><div class="t">手机端上架</div><div class="d">点击【报价】→ 发布商品（选<b>醒市担保/自由交易</b>，维护价格、库存、包装/激活/落地/渠道）→ 确认发布；在【我的货架】可查看/下架/更新报价（<b>报价时效2天</b>，记得及时更新）</div></div></div>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img6/fx08.png" onclick="lb(this,'手机端：点击报价')"><div class="cap">① 报价</div></div>
+        <div class="pic"><img src="supplier-img6/fx09.png" onclick="lb(this,'发布商品：价格/库存/自由交易或醒市担保')"><div class="cap">② 发布商品</div></div>
+        <div class="pic"><img src="supplier-img6/fx10.png" onclick="lb(this,'我的货架：出售中·更新报价')"><div class="cap">③ 我的货架</div></div>
+      </div>
+      <div class="step"><div class="dot">2</div><div class="body"><div class="t">PC端批量导入</div><div class="d">登录网址：<b>market.xingshiapp.cn</b>（建议谷歌浏览器），选择上架主体登录 → 选【醒市担保】→ 下载模板 → 按模板sheet2选商品/SKU、录入sheet1（价格/库存/标签）→ 上传excel（<b>单次上限300条</b>）</div></div></div>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img6/fx11.png" onclick="lb(this,'PC端：醒市担保·下载模板')"><div class="cap">④ 下载模板</div></div>
+        <div class="pic"><img src="supplier-img6/fx12.png" onclick="lb(this,'PC端：批量导入上传excel')"><div class="cap">⑤ 上传excel</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="f3">
+    <div class="card">
+      <h2><span class="no p">3</span>卖家发货</h2>
+      <div class="step"><div class="dot">1</div><div class="body"><div class="t">外部商发货</div><div class="d">操作端<b>【市场助手】</b>：我出售的 → 待发货订单 → 点击【发货】→ 选择<b>发货方式 + 录入串码</b> → 确认发货</div></div></div>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img6/fx13.png" onclick="lb(this,'市场助手：我出售的·点击发货')"><div class="cap">① 点击发货</div></div>
+        <div class="pic"><img src="supplier-img6/fx14.png" onclick="lb(this,'发货：配送方式+串码信息录入')"><div class="cap">② 发货方式 + 串码</div></div>
+      </div>
+      <div class="step"><div class="dot">2</div><div class="body"><div class="t">能良系发货</div><div class="d"><b>订单推送聚水潭，请到聚水潭发货</b></div></div></div>
+      <div class="tip">可提前录入发货信息，买家付款后订单将自动更新为已发货。</div>
+    </div>
+  </div>
+
+  <div class="section" id="f4">
+    <div class="card">
+      <h2><span class="no p">4</span>门店进货 · 门店入驻购机通</h2>
+      <div class="step"><div class="dot">1</div><div class="body"><div class="t">扫BD码 → 点【注册新主体】</div><div class="d">未注册门店点击<b>注册新主体</b></div></div></div>
+      <div class="pics"><div class="pic"><img src="supplier-img6/fx15.png" onclick="lb(this,'选择登录门店·注册新主体')"><div class="cap">① 注册新主体</div></div></div>
+      <div class="step"><div class="dot">2</div><div class="body"><div class="t">填写企业信息</div><div class="d">选择<b>企业/个体工商户</b>，填写企业名称、统一社会信用代码、法人姓名、法人身份证号、营业执照（<b>个体工商户法人身份证号必填</b>）</div></div></div>
+      <div class="pics"><div class="pic"><img src="supplier-img6/fx16.png" onclick="lb(this,'门店入驻：填写企业信息')"><div class="cap">② 填写企业信息</div></div></div>
+      <div class="step"><div class="dot">3</div><div class="body"><div class="t">录入门店信息</div><div class="d">门店名称、所属行业、主营品牌、门店地址、门店电话（可传门头照片），勾选协议提交审核</div></div></div>
+      <div class="pics"><div class="pic"><img src="supplier-img6/fx17.png" onclick="lb(this,'门店入驻：录入门店信息·提交审核')"><div class="cap">③ 录入门店信息</div></div></div>
+      <div class="step"><div class="dot">4</div><div class="body"><div class="t">等待审核完成</div><div class="d">审核通过后即可外展</div></div></div>
+    </div>
+  </div>
+
+  <div class="section" id="f5">
+    <div class="card">
+      <h2><span class="no p">5</span>门店进货 · 下单进货</h2>
+      <div class="step"><div class="dot">1</div><div class="body"><div class="t">选品</div><div class="d">在<b>【购机通】新增一级菜单"进货"</b>（限B端门店可见）：左上角省份（门店所在城市，无商品则取全省报价，全省无则取全国）→ 搜索/分类 → 筛选 → 选择商品<b>去下单</b></div></div></div>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img6/fx18.png" onclick="lb(this,'进货选品：省份+分类+筛选')"><div class="cap">① 选品</div></div>
+        <div class="pic"><img src="supplier-img6/fx19.png" onclick="lb(this,'商品详情·去下单')"><div class="cap">② 去下单</div></div>
+      </div>
+      <div class="step"><div class="dot">2</div><div class="body"><div class="t">下单支付</div><div class="d">选收货地址 → <b>平安账户（钱包）支付</b>——<b>暂不支持微信、支付宝、云闪付</b> → 下单并支付</div></div></div>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img6/fx20.png" onclick="lb(this,'选地址+钱包支付·下单并支付')"><div class="cap">③ 钱包支付</div></div>
+        <div class="pic"><img src="supplier-img6/fx21.png" onclick="lb(this,'订单详情：上传串码（卖家未录入则买家维护）')"><div class="cap">④ 上传串码</div></div>
+      </div>
+      <div class="step"><div class="dot">3</div><div class="body"><div class="t">确认收货</div><div class="d">确认收货须上传收货商品串码（若卖家未录入则买家可维护）→ 订单完成</div></div></div>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img6/fx22.png" onclick="lb(this,'订单完成：查看串码/物流')"><div class="cap">⑤ 订单完成</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="f6">
+    <div class="card">
+      <h2><span class="no p">6</span>在【库存】页面下进货订单</h2>
+      <p><span class="hl">注意：</span>目前在市场助手上架的商品，<b>有些情况下不在【库存】页面展示</b>。</p>
+      <div style="height:6px"></div>
+      <div class="tip">① 自进货兼容到库存后（<b>2026年1月8日</b>），<b>省分公司主体</b>在市场助手上架的订单，通过购机通【库存】页面下单的，在聚水潭会<b>自动创建订单</b>，无需手动创建。<br>② 外部商在市场助手上架的，<b>无需推送聚水潭</b>。<br>③ 发票线下。<br>④ 不支持个人买家下单；本期不支持分店使用总店余额进行下单。</div>
+      <div class="warn"><b>服务费点位：</b>本期<b>卖家收取千分之2</b>，买家不收服务费。</div>
+    </div>
+    <div class="card">
+      <h2><span class="no p">?</span>高频疑问</h2>
+      <div class="step"><div class="dot">1</div><div class="body"><div class="t">如何避免供应商乱报价、不履约？</div><div class="d">后期版本会上线供应商管控机制（如保证金）</div></div></div>
+      <div class="step"><div class="dot">2</div><div class="body"><div class="t">通过购机通走市场分销采货，费用怎么算？</div><div class="d"><b>千2平台技术服务费，收卖方</b></div></div></div>
+      <div class="step"><div class="dot">3</div><div class="body"><div class="t">卖家信息保密？</div><div class="d">卖家信息不保密，厂商发现后有处罚风险</div></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">数据来源：飞书《购机通-门店铺货SOP》《门店现货上架--对内文档》《购机通-进货》 · 购机通</div>
+</div><!-- /root -->
 
 <div class="lb" id="lb" onclick="if(event.target===this)closeLb()">
   <span class="lbx" onclick="closeLb()">✕</span>
@@ -435,17 +576,53 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
   <div class="lbc" id="lbCap"></div>
 </div>
 
+<button class="editfab" id="editFab" onclick="toggleEdit()">✏️</button>
+<div class="editpanel" id="editPanel">
+  <div class="ept">✏️ 编辑模式：直接点击任意文字修改，改完记得保存</div>
+  <button class="s" onclick="saveEdits()">💾 保存修改（本机浏览器）</button>
+  <button class="e" onclick="exportHtml()">📤 导出HTML文件（发我即可更新公网）</button>
+  <button class="c" onclick="toggleEdit()">✔️ 完成编辑</button>
+</div>
+
 <script>
+var EDIT_KEY='gjt_edits_v2';
+function restoreEdits(){
+  try{var s=localStorage.getItem(EDIT_KEY);if(s){document.getElementById('root').innerHTML=s;}}catch(e){}
+}
+var editOn=false;
+function toggleEdit(){
+  editOn=!editOn;
+  var els=document.querySelectorAll('#root .card p,#root .card h2,#root .overview p,#root .overview h2,#root .step .t,#root .step .d,#root .swiper .sc .t,#root .swiper .sc .d,#root .warn,#root .tip,#root .path,#root .pics .cap,#root .footer,#root .header h1,#root .header .sub,#root .ept');
+  for(var i=0;i<els.length;i++){els[i].contentEditable=editOn?'true':'false'}
+  document.getElementById('editPanel').style.display=editOn?'flex':'none';
+  document.getElementById('editFab').textContent=editOn?'✔️':'✏️';
+  document.getElementById('editFab').style.background=editOn?'#1b8a5a':'linear-gradient(135deg,#e08a2e,#ffb454)';
+}
+function saveEdits(){
+  try{localStorage.setItem(EDIT_KEY,document.getElementById('root').innerHTML);alert('✅ 已保存到本机浏览器。刷新页面后修改仍在（同一浏览器）。');}catch(e){alert('保存失败：'+e.message)}
+}
+function exportHtml(){
+  try{
+    var html='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
+    var blob=new Blob([html],{type:'text/html;charset=utf-8'});
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mendian-all-已编辑.html';
+    document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},3000);
+    alert('📤 已导出HTML文件（含你的修改）。把该文件发给我，即可更新公网链接让同事看到。');
+  }catch(e){alert('导出失败：'+e.message)}
+}
 function lb(img,cap){var d=document.getElementById('lb');d.style.display='flex';document.getElementById('lbImg').src=img.src;document.getElementById('lbCap').textContent=cap||'';document.body.style.overflow='hidden'}
 function closeLb(){document.getElementById('lb').style.display='none';document.body.style.overflow=''}
 function sw(name){
-  var buhuo=name==='buhuo';
-  document.getElementById('tabB').className='tb'+(buhuo?' on':'');
-  document.getElementById('tabX').className='tb'+(buhuo?'':' on');
-  document.getElementById('panel-buhuo').className='panel'+(buhuo?' active':'');
-  document.getElementById('panel-xiandai').className='panel'+(buhuo?'':' active');
-  if(buhuo)scrollTo(0,70);else scrollTo(0,70);
+  var ob=name==='buhuo',ox=name==='xiandai',of=name==='fenxiao';
+  document.getElementById('tabB').className='tb'+(ob?' on':'');
+  document.getElementById('tabX').className='tb'+(ox?' on':'');
+  document.getElementById('tabF').className='tb'+(of?' on':'');
+  document.getElementById('panel-buhuo').className='panel'+(ob?' active':'');
+  document.getElementById('panel-xiandai').className='panel'+(ox?' active':'');
+  document.getElementById('panel-fenxiao').className='panel'+(of?' active':'');
+  window.scrollTo(0,70);
 }
+restoreEdits();
 </script>
 </body>
 </html>
