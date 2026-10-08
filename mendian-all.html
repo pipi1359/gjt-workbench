@@ -760,7 +760,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 
 <script>
 var EDIT_KEY='gjt_edits_v3';
-var EDIT_VER='20261008f';
+var EDIT_VER='20261008g';
 var SUPABASE_URL='https://xwwdksbxxhbqnlrvegus.supabase.co';
 var SUPABASE_KEY='sb_publishable_V-PcQl_E8BRf0lTBgE2Q-w_nRznHGDp';
 var TBL='workbench_content';
@@ -787,9 +787,10 @@ function loadCloud(){
   .then(function(r){return r.json()})
   .then(function(d){
     if(d&&d[0]&&d[0].content){
-      document.getElementById('root').innerHTML=d[0].content;
-      clearEditAttrs();
-      try{localStorage.setItem(EDIT_KEY,JSON.stringify({ver:EDIT_VER,html:d[0].content}))}catch(e){}
+      var s='';
+      try{var o=JSON.parse(d[0].content); if(o&&o.ver===EDIT_VER&&o.html){s=o.html}}catch(e2){s=''}
+      if(s){document.getElementById('root').innerHTML=s;clearEditAttrs()}
+      else{try{localStorage.setItem(EDIT_KEY,JSON.stringify({ver:EDIT_VER,html:document.getElementById('root').innerHTML}))}catch(e){}}
     }
   }).catch(function(){});
 }
@@ -814,8 +815,8 @@ function toggleEdit(){
 }
 function saveEdits(){
   var root=document.getElementById('root');
-  var content=root.innerHTML;
-  try{localStorage.setItem(EDIT_KEY,JSON.stringify({ver:EDIT_VER,html:content}))}catch(e){}
+  var content=JSON.stringify({ver:EDIT_VER,html:root.innerHTML});
+  try{localStorage.setItem(EDIT_KEY,content)}catch(e){}
   var payload={id:'root',content:content,updated_at:new Date().toISOString()};
   var h=supHdrs(); h['Prefer']='resolution=merge-duplicates';
   fetch(SUPABASE_URL+'/rest/v1/'+TBL,{method:'POST',headers:h,body:JSON.stringify(payload)})
