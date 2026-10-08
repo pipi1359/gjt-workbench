@@ -94,6 +94,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
   <div class="tb on" id="tabB" onclick="sw('buhuo')">🛒 门店铺货操作<span class="en">铺货下单 · 收货 · 提现</span></div>
   <div class="tb" id="tabX" onclick="sw('xiandai')">🏪 门店现货上架<span class="en">上架 · 下单 · 发货 · 结算</span></div>
   <div class="tb" id="tabF" onclick="sw('fenxiao')">📦 分销进货<span class="en">卖家上架 · 门店进货</span></div>
+  <div class="tb" id="tabY" onclick="sw('xiny')">💳 小U焕新<span class="en">POS机 · 小程序 · 对账</span></div>
 </div>
 
 <!-- ============ 面板一：门店铺货操作 ============ -->
@@ -575,6 +576,171 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
   </div>
 </div>
 
+<!-- ============ 面板四：小U焕新（银联收银核销） ============ -->
+<div class="panel" id="panel-xiny">
+  <div class="mnav" id="mnav-xiny">
+    <a href="#y0" class="on">⚠️ 注意事项</a>
+    <a href="#y1">📟 POS机操作</a>
+    <a href="#y2">📱 微信小程序</a>
+    <a href="#y3">📊 对账</a>
+  </div>
+
+  <div class="section" id="y0">
+    <div class="card">
+      <h2><span class="no">★</span>注意事项（新商户必看）</h2>
+      <div class="tip">① 安装后第一次使用，建议做一笔<b>测试交易</b>，务必核对"签购单"商户名称是否与营业执照一致，如不一致立刻联系银商客户经理确认，并再次确认"商户编号"和"终端编号"是否正确，确认完毕后把测试交易撤销。<br>② 完成核对后<b>强烈建议修改登录密码</b>，避免账号密码泄露被不法分子登录，造成不必要的损失。</div>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img7/xy01.png" onclick="lb(this,'注意事项：测试交易核对签购单 + 修改登录密码')"><div class="cap">测试交易核对 + 修改登录密码</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="y1">
+    <div class="card">
+      <h2><span class="no">1</span>APP下载及登录</h2>
+      <p><span class="hl">路径：</span>智能终端界面 → 选择<b>"其他"</b> → 选择<b>"应用市场"</b> → 搜索<b>"小U焕新"</b>并下载（2.1.7版本），完成点击进入。</p>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img7/xy02.png" onclick="lb(this,'智能终端→其他→应用市场→搜索小U焕新下载')"><div class="cap">APP 下载及登录</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2><span class="no">2</span>商家登录</h2>
+      <p>进入"小U焕新"APP后，选择<b>企业登录（默认）</b>，输入账号密码，并勾选《银联商务用户隐私政策》提示框，点击<b>立即登录</b>（首次登录需进行图片认证）。</p>
+      <div class="tip">注意：若一个门店多终端，<b>主账号选择企业登录，其他终端账号选择员工登录</b>（账号密码为国补小U登录的账号密码）。</div>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img7/xy03.png" onclick="lb(this,'企业登录（默认）→ 输入账号密码 → 勾选隐私政策 → 立即登录')"><div class="cap">商家登录（企业/员工）</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2><span class="no">3</span>商品销售入口</h2>
+      <p>登录完成后，首页进入<b>"搜索销售"</b>。</p>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img7/xy04.png" onclick="lb(this,'登录完成后首页进入搜索销售')"><div class="cap">商品销售入口</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2><span class="no">4</span>商品搜索</h2>
+      <p>输入商品<b>69码</b>，点击<b>"搜索"</b>，搜索相关商品。</p>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img7/xy05.png" onclick="lb(this,'输入商品69码→点击搜索')"><div class="cap">商品搜索（69码）</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2><span class="no">5</span>商品改价（可选）</h2>
+      <p>商品搜索成功后，点击右侧<b>"+"</b>按钮，点击<b>"×"</b>删除原定金额，重新输入修改后的价格，点击<b>确认</b>即可修改成功。</p>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img7/xy06.png" onclick="lb(this,'点+ → ×删原价 → 重输价格 → 确认')"><div class="cap">商品改价（可选）</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2><span class="no">6</span>收款</h2>
+      <p>确认金额后，点击<b>"收款"</b>，选择<b>"扫一扫"</b>或<b>"聚分期"</b>，完成收货地址填写。</p>
+      <div class="tip">注意：选择"自提"，需要手动填写好地址；在小U焕新主界面<b>我的 → 右上角"修改"</b>完成"所在地区、详细地址"填写，下次选择"自提"会自动填充门店地址。</div>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img7/xy07.png" onclick="lb(this,'确认金额→收款→扫一扫/聚分期→填写收货地址')"><div class="cap">收款（扫一扫/聚分期）</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2><span class="no">7</span>完成收款</h2>
+      <p>点击摄像头，<b>扫一扫顾客云闪付付款码</b>，支付成功，<b>打印POS小票</b>。</p>
+      <div class="tip">注意：第一次交易请核对打印小票的<b>商户名称</b>是否与商户营业执照或者门店名称相符，<b>优惠金额</b>等信息是否准确。</div>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img7/xy08.png" onclick="lb(this,'摄像头扫顾客云闪付付款码 → 支付成功打印POS小票')"><div class="cap">完成收款（扫云闪付付款码）</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2><span class="no">8</span>订单查询</h2>
+      <p>交易完成后，可在APP首页，下方<b>"订单"</b>界面查询到对应交易订单。</p>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img7/xy09.png" onclick="lb(this,'APP首页下方订单界面查询交易订单')"><div class="cap">订单查询</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2><span class="no">9</span>订单退货/撤销操作（一）</h2>
+      <p>进入<b>"订单"</b>界面，找到对应需撤销订单，点击进入；选择<b>"退货"</b>，确认订单后选择<b>"确定"</b>。</p>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img7/xy10.png" onclick="lb(this,'订单→对应订单→退货→确认')"><div class="cap">订单退货/撤销（一）</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2><span class="no">10</span>订单退货/撤销操作（二）</h2>
+      <p>输入<b>主管密码：111111</b>，点击确定，完成退货；交易完成后，订单页面，此订单会由原先"已支付"状态，变成<b>"已退货"</b>。</p>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img7/xy11.png" onclick="lb(this,'输入主管密码111111 → 确定 → 状态变为已退货')"><div class="cap">订单退货/撤销（二）主管密码</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="y2">
+    <div class="card">
+      <h2><span class="no">1</span>进入商户端小程序 · 登录 · 开单销售</h2>
+      <p>① 进入商户端小程序，<b>建议先打开手机定位</b>；② 登录（账号密码<b>咨询客户经理</b>）；③ 开单销售（点击<b>搜索销售</b>）。</p>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img7/xy12.png" onclick="lb(this,'进入小程序（先开定位）→ 登录（咨询客户经理）→ 开单销售')"><div class="cap">进入 · 登录 · 开单销售</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2><span class="no">2</span>销售：扫描/手输条码 · 搜索 · 改价</h2>
+      <p>④ 销售-点击<b>扫描/手输条码</b>；⑤ 搜索销售-点击<b>扫描/手输条码</b>；⑥ 价格修改（<b>仅支持改低</b>）。</p>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img7/xy13.png" onclick="lb(this,'扫描/手输条码 → 搜索销售 → 价格修改（仅支持改低）')"><div class="cap">扫描条码 · 搜索销售 · 改价</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2><span class="no">3</span>支付方式 · 订单信息 · 资格码</h2>
+      <p>⑦ 选择<b>"扫一扫"</b>支付方式；⑧ 填写订单信息（选择自提或者输入送货地址，<b>电脑及3C需要输入SN</b>）；⑨ 扫描<b>以旧换新资格码</b>（或者跳过）。</p>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img7/xy14.png" onclick="lb(this,'扫一扫支付 → 填写订单信息（3C需SN）→ 扫描以旧换新资格码')"><div class="cap">支付 · 订单信息 · 资格码</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2><span class="no">4</span>保存签购单、小票</h2>
+      <p>收款支付完成后，在订单详情点击<b>"签购单/小票"</b>，再点击<b>"保存到相册"</b>即可保存凭证。</p>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img7/xy15.png" onclick="lb(this,'订单详情→签购单/小票→保存到相册')"><div class="cap">保存签购单、小票</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2><span class="no">5</span>退货（退货密码111111，可修改）</h2>
+      <p>订单列表选中对应订单 → 订单详情点击<b>"退货"</b> → 弹出退款确认提示框 → 输入<b>主管密码（初始111111，可修改）</b> → 确认，退款申请受理，款项原路退回。</p>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img7/xy16.png" onclick="lb(this,'订单→退货→确认退款→输入主管密码111111→受理')"><div class="cap">退货（密码111111）</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2><span class="no">6</span>首次使用常用功能、常见问题</h2>
+      <p>报错<b>"未配置支付参数，请至商家中心配置"</b>：将"我的"页面截图，连同报错截图一同发给对接的客户经理。<br>修改"登录密码"：商户在<b>"我的"</b>页面自行修改。<br>修改"退货主管密码"：将"我的"页面截图，和修改后的"主管密码"一同发给对接的客户经理处理。</p>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img7/xy17.png" onclick="lb(this,'未配置支付参数→发客户经理；修改登录密码；修改退货主管密码')"><div class="cap">常见问题处理</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="y3">
+    <div class="card">
+      <h2><span class="no">1</span>电脑浏览器登录对账</h2>
+      <p>电脑浏览器打开：<b>https://uplus.chinaums.com/retail/#/login</b>，选择<b>企业登录</b>（账号密码咨询POS机客户经理）。</p>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img7/xy18.png" onclick="lb(this,'浏览器打开对账网址 → 企业登录')"><div class="cap">电脑登录对账</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2><span class="no">2</span>订单明细报表查询</h2>
+      <p><b>报表 → 订单明细报表 → 选择门店 → 筛选下单时间（跨度建议不要超过一个月）→ 查询</b>（数据实时更新，电脑端为准）。</p>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img7/xy19.png" onclick="lb(this,'报表→订单明细报表→选门店→筛选下单时间→查询')"><div class="cap">订单明细报表查询</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2><span class="no">3</span>下载报表</h2>
+      <p>点击<b>"下载"</b>按钮（若生成状态显示"文件生成中"，需要稍等片刻后点击一下<b>"搜索"</b>按钮）。</p>
+      <div class="pics">
+        <div class="pic"><img src="supplier-img7/xy20.png" onclick="lb(this,'点击下载（生成中则稍等再点搜索）')"><div class="cap">下载报表</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="footer">数据来源：飞书《购机通-门店铺货SOP》《门店现货上架--对内文档》《购机通-进货》 · 购机通</div>
 </div><!-- /root -->
 
@@ -594,7 +760,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 
 <script>
 var EDIT_KEY='gjt_edits_v3';
-var EDIT_VER='20261008e';
+var EDIT_VER='20261008f';
 var SUPABASE_URL='https://xwwdksbxxhbqnlrvegus.supabase.co';
 var SUPABASE_KEY='sb_publishable_V-PcQl_E8BRf0lTBgE2Q-w_nRznHGDp';
 var TBL='workbench_content';
@@ -676,13 +842,15 @@ function exportHtml(){
 function lb(img,cap){var d=document.getElementById('lb');d.style.display='flex';document.getElementById('lbImg').src=img.src;document.getElementById('lbCap').textContent=cap||'';document.body.style.overflow='hidden'}
 function closeLb(){document.getElementById('lb').style.display='none';document.body.style.overflow=''}
 function sw(name){
-  var ob=name==='buhuo',ox=name==='xiandai',of=name==='fenxiao';
+  var ob=name==='buhuo',ox=name==='xiandai',of=name==='fenxiao',oy=name==='xiny';
   document.getElementById('tabB').className='tb'+(ob?' on':'');
   document.getElementById('tabX').className='tb'+(ox?' on':'');
   document.getElementById('tabF').className='tb'+(of?' on':'');
+  document.getElementById('tabY').className='tb'+(oy?' on':'');
   document.getElementById('panel-buhuo').className='panel'+(ob?' active':'');
   document.getElementById('panel-xiandai').className='panel'+(ox?' active':'');
   document.getElementById('panel-fenxiao').className='panel'+(of?' active':'');
+  document.getElementById('panel-xiny').className='panel'+(oy?' active':'');
   window.scrollTo(0,70);
 }
 restoreEdits();
