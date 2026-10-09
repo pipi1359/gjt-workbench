@@ -2413,18 +2413,17 @@ setInterval(loadApp, 60000);
     }
   }
 
-  /* ---- 整工作台文字 contenteditable（只开放文本叶子，避免误改容器） ---- */
+  /* ---- 整工作台文字 contenteditable（参照原门店总台编辑逻辑：所有文字元素开放，便于整句修改） ---- */
   function setWholeEditable(on){
     var main=document.getElementById('app-main'); if(!main) return;
     var all=main.querySelectorAll('*');
     for(var i=0;i<all.length;i++){
       var el=all[i], t=el.tagName;
-      if(t==='IMG'||t==='VIDEO'||t==='A'||t==='BUTTON'||t==='INPUT'||t==='BR'||t==='SCRIPT'||t==='STYLE')continue;
-      if(el.closest('.ed-box')||el.closest('.ed-addbar')||el.closest('.ed-ops'))continue;
-      // 只开放“叶子”（没有元素子节点）的文字元素
-      var hasElemChild=false;
-      for(var c=0;c<el.children.length;c++){ if(el.children[c].tagName!=='BR'){hasElemChild=true;break;} }
-      if(on && !hasElemChild){ el.setAttribute('contenteditable','true'); }
+      if(t==='IMG'||t==='VIDEO'||t==='A'||t==='BUTTON'||t==='INPUT'||t==='BR'||t==='SCRIPT'||t==='STYLE'||t==='SOURCE'||t==='TRACK')continue;
+      if(el.closest('.ed-box')||el.closest('.ed-addbar')||el.closest('.ed-ops')||el.closest('.tabs'))continue;
+      // 只对含文本内容的元素开放（避免空容器误进入编辑态）
+      var hasText = (el.textContent||'').trim().length>0;
+      if(on && hasText){ el.setAttribute('contenteditable','true'); }
       else if(!on){ el.removeAttribute('contenteditable'); }
     }
   }
