@@ -1972,20 +1972,65 @@ function renderMonthlyReport(){
 /* ===== 国补备案价（独立加载 + 筛选 + 分页） ===== */
 let priceData=null, priceLoading=false, priceKw='', priceCat='', pricePage=1, priceCats=null;
 const PRICE_PAGE=100;
+const PRICE_TBL='gjt_price';          // Supabase 价格表
+const PRICE_ROW=1;                     // 单行存储整份价格 payload
+function priceHdrs(){ return {'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}; }
+
+/* 从 Supabase 价格表拉取；未创建/失败则回退 price.json */
+function loadPriceFromCloud(){
+  return fetch(SUPA_URL+'/rest/v1/'+PRICE_TBL+'?select=payload&id=eq.'+PRICE_ROW,{headers:priceHdrs()})
+    .then(function(r){ if(!r.ok)throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(d){
+      if(d&&d.length&&d[0]&&d[0].payload&&d[0].payload.items&&d[0].payload.items.length){
+        var p=d[0].payload;
+        applyPrice(p);
+        return true;
+      }
+      return false;
+    })
+    .catch(function(){ return false; });
+}
+function loadPriceFromFile(){
+  return fetch('price.json',{cache:'default'})
+    .then(function(r){ if(!r.ok)throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(d){ applyPrice(d); return true; })
+    .catch(function(){ return false; });
+}
+function applyPrice(d){
+  priceData=d;
+  var set={};
+  (d.items||[]).forEach(function(it){ if(it.c)set[it.c]=1; });
+  priceCats=Object.keys(set).sort();
+  // 若当前正处于数据视图，重新渲染价格区域；否则 renderPriceTab 在下次进入时生效
+  var cur=(location.hash||'').replace('#','').split('&')[0]||'home';
+  if(cur==='data' && typeof renderData==='function') renderData();
+  else renderPriceTab();
+}
 function loadPrice(){
   if(priceLoading||priceData)return;
   priceLoading=true;
-  // 使用浏览器缓存：首次下载后，之后打开秒开（数据更新时浏览器自动重新获取）
-  fetch('price.json',{cache:'default'})
-  .then(function(r){ if(!r.ok)throw new Error('HTTP '+r.status); return r.json(); })
-  .then(function(d){
-    priceData=d; priceLoading=false;
-    var set={};
-    (d.items||[]).forEach(function(it){ if(it.c)set[it.c]=1; });
-    priceCats=Object.keys(set).sort();
-    renderPriceTab();
-  })
-  .catch(function(){ priceLoading=false; toast('价格表加载失败，请检查网络'); });
+  loadPriceFromCloud().then(function(ok){
+    if(!ok)return loadPriceFromFile();
+  }).then(function(ok){
+    priceLoading=false;
+    if(!ok)toast('价格表加载失败，请检查网络');
+  }).catch(function(){ priceLoading=false; });
+}
+/* 自动同步：定时检测 Supabase 价格表版本（payload->>generated），变化则重新加载 */
+function pollPrice(){
+  fetch(SUPA_URL+'/rest/v1/'+PRICE_TBL+'?select=payload->>generated&id=eq.'+PRICE_ROW,{headers:priceHdrs()})
+    .then(function(r){ if(!r.ok)return; return r.json(); })
+    .then(function(d){
+      if(d&&d.length&&d[0]&&d[0].generated){
+        var cur=d[0].generated;
+        if(priceData && cur && cur!==priceData.generated){
+          // 有新版本：重新拉取全量并刷新
+          loadPriceFromCloud().then(function(ok){
+            if(ok && typeof toast==='function')toast('🔄 国补备案价已自动更新到最新');
+          });
+        }
+      }
+    }).catch(function(){});
 }
 function renderPriceTab(){
   if(!priceData){
@@ -2223,6 +2268,9 @@ setInterval(loadQA, 60000);
 /* ===== 数据板块云端快速更新：初始化 + 轮询 ===== */
 loadApp();
 setInterval(loadApp, 60000);
+/* ===== 国补备案价：云端自动同步（Supabase 价格表有更新则自动刷新） ===== */
+setTimeout(pollPrice, 5000);
+setInterval(pollPrice, 30000);
 
 </script>
 
