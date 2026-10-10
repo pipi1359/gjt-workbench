@@ -1,0 +1,38 @@
+name: Sync Guobao Price to Supabase
+
+on:
+  schedule:
+    # 每 30 分钟运行一次（UTC）。GitHub Actions 定时使用 UTC 时间，
+    # 对应北京时间整点/半点 +8 小时。
+    - cron: '*/30 * * * *'
+  workflow_dispatch:   # 支持手动触发
+  push:
+    paths:
+      - 'source/**'
+      - 'scripts/**'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install openpyxl requests
+
+      - name: Run price sync
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          SOURCE_FILE: ${{ vars.SOURCE_FILE }}
+        run: python scripts/sync_price.py
