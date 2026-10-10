@@ -734,17 +734,8 @@ function loadQA(){
   })
   .catch(function(){});
 }
-function renderQA(){
-  const src=qaSrc();
-  const kw=qaState.kw.trim();
-  const list=src.filter(function(q){return !kw||(q.question&&q.question.indexOf(kw)>=0)||(q.answer&&q.answer.indexOf(kw)>=0);});
-  let html=`<div class="section-title"><span class="bar"></span>常见问答</div>`;
-  if(!qaState.edit){
-    html+=`<div style="display:flex;gap:8px;margin-bottom:12px"><div class="qa-search" style="flex:1">${ICONS.qa}
-      <input id="qa-input" placeholder="搜索问题 / 关键词" value="${esc(qaState.kw)}" oninput="qaState.kw=this.value;clearTimeout(window.__qaT);window.__qaT=setTimeout(renderQA,300)">
-    </div><button onclick="enterQAEdit()" style="flex:0 0 auto;background:#22c55e;color:#fff;padding:0 16px;border-radius:8px;font-size:13px;border:none;cursor:pointer">编辑</button></div>
-    <div id="qa-list">
-      ${list.length?list.map(q=>`
+function qaListHtml(list){
+  return list.length?list.map(q=>`
         <div class="qa-item" id="qa-${q.id}">
           <div class="qa-q" onclick="toggleQA(${q.id})">
             <div class="q-text">${esc(q.question)}</div>
@@ -757,7 +748,27 @@ function renderQA(){
             ${q.attachments&&q.attachments.length?`<div class="qa-files">${q.attachments.map(a=>`<a class="qa-file" href="${a.url}" target="_blank" rel="noopener">${ICONS.file}${esc(a.name||'附件')}</a>`).join('')}</div>`:''}
           </div>
         </div>
-      `).join(''):`<div class="qa-empty">未找到相关问题，试试其他关键词</div>`}
+      `).join(''):`<div class="qa-empty">未找到相关问题，试试其他关键词</div>`;
+}
+function updateQAList(){
+  // 只刷新问答列表，不重建输入框，避免打断输入法组合导致乱码
+  const src=qaSrc();
+  const kw=(qaState.kw||'').trim();
+  const list=src.filter(function(q){return !kw||(q.question&&q.question.indexOf(kw)>=0)||(q.answer&&q.answer.indexOf(kw)>=0);});
+  const el=document.getElementById('qa-list');
+  if(el) el.innerHTML=qaListHtml(list);
+}
+function renderQA(){
+  const src=qaSrc();
+  const kw=qaState.kw.trim();
+  const list=src.filter(function(q){return !kw||(q.question&&q.question.indexOf(kw)>=0)||(q.answer&&q.answer.indexOf(kw)>=0);});
+  let html=`<div class="section-title"><span class="bar"></span>常见问答</div>`;
+  if(!qaState.edit){
+    html+=`<div style="display:flex;gap:8px;margin-bottom:12px"><div class="qa-search" style="flex:1">${ICONS.qa}
+      <input id="qa-input" placeholder="搜索问题 / 关键词" value="${esc(qaState.kw)}" oninput="qaState.kw=this.value;clearTimeout(window.__qaT);window.__qaT=setTimeout(updateQAList,300)">
+    </div><button onclick="enterQAEdit()" style="flex:0 0 auto;background:#22c55e;color:#fff;padding:0 16px;border-radius:8px;font-size:13px;border:none;cursor:pointer">编辑</button></div>
+    <div id="qa-list">
+      ${qaListHtml(list)}
     </div>`;
   }else{
     html+=`<div style="display:flex;gap:8px;margin-bottom:12px;align-items:center">
