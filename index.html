@@ -1456,11 +1456,12 @@ function renderPriceBody(){
   var el=document.getElementById('price-body');
   if(!el)return;
   var items=priceData.items||[];
-  var kw=priceKw.trim().toLowerCase();
+  var kw=priceKw.trim().toLowerCase().replace(/\s+/g,'');
   var f=items.filter(function(it){
     if(priceCat&&it.c!==priceCat)return false;
     if(!kw)return true;
-    return (it.b+' '+(it.n||'')+' '+(it.br||'')+' '+(it.m||'')).toLowerCase().indexOf(kw)>=0;
+    var hay=(it.b+' '+(it.n||'')+' '+(it.br||'')+' '+(it.m||'')).toLowerCase().replace(/\s+/g,'');
+    return hay.indexOf(kw)>=0;
   });
   var total=f.length, pages=Math.max(1,Math.ceil(total/PRICE_PAGE));
   if(pricePage>pages)pricePage=1;
