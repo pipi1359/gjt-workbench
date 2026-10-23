@@ -729,7 +729,14 @@ let qaState={kw:'',edit:false,cat:'全部'};
 function resetQAState(){qaState.kw='';qaState.cat='全部';qaState.edit=false;}
 // QA 分类映射（按 id）
 const QA_CATS=['全部','门店铺货','国补云闪付','分销进货','通用其他'];
-const QA_CAT_MAP={
+const QA_IMG_MAP={
+  1:['https://pipi1359.github.io/gjt-workbench/assets/qa-image2.jpeg','https://pipi1359.github.io/gjt-workbench/assets/qa-image3.jpeg'],
+  2:['https://pipi1359.github.io/gjt-workbench/assets/qa-image4.png'],
+  3:['https://pipi1359.github.io/gjt-workbench/assets/qa-image1.png'],
+  4:['https://pipi1359.github.io/gjt-workbench/assets/qa-image5.png'],
+  5:['https://pipi1359.github.io/gjt-workbench/assets/qa-image6.png'],
+  6:['https://pipi1359.github.io/gjt-workbench/assets/qa-image7.png']
+};const QA_CAT_MAP={
  1:'国补云闪付',2:'国补云闪付',3:'国补云闪付',4:'分销进货',5:'国补云闪付',6:'国补云闪付',7:'国补云闪付',8:'国补云闪付',
  9:'通用其他',10:'国补云闪付',11:'通用其他',12:'通用其他',13:'国补云闪付',14:'通用其他',15:'通用其他',16:'国补云闪付',
  17:'通用其他',18:'国补云闪付',19:'国补云闪付',20:'国补云闪付',21:'通用其他',22:'通用其他',23:'通用其他',24:'通用其他',
@@ -750,7 +757,9 @@ function loadQA(){
   .catch(function(){});
 }
 function qaListHtml(list){
-  return list.length?list.map(q=>`
+  return list.length?list.map(q=>{
+    const imgs=(q.images&&q.images.length)?q.images:(QA_IMG_MAP[q.id]||[]);
+    return `
         <div class="qa-item" id="qa-${q.id}">
           <div class="qa-q" onclick="toggleQA(${q.id})">
             <div class="q-text">${esc(q.question)}</div>
@@ -759,11 +768,11 @@ function qaListHtml(list){
           <div class="qa-a">
             <div class="a-head">${ICONS.check}解答</div>
             <div class="a-body">${esc(q.answer)}</div>
-            ${q.images&&q.images.length?`<div class="qa-imgs">${q.images.map((im,ix)=>`<img src="${im}" loading="lazy" onclick="openViewer('${im}','${esc(q.question)} 图${ix+1}')">`).join('')}</div>`:''}
+            ${imgs.length?`<div class="qa-imgs">${imgs.map((im,ix)=>`<img src="${im}" loading="lazy" onclick="openViewer('${im}','${esc(q.question)} 图${ix+1}')">`).join('')}</div>`:''}
             ${q.attachments&&q.attachments.length?`<div class="qa-files">${q.attachments.map(a=>`<a class="qa-file" href="${a.url}" target="_blank" rel="noopener">${ICONS.file}${esc(a.name||'附件')}</a>`).join('')}</div>`:''}
           </div>
         </div>
-      `).join(''):`<div class="qa-empty">未找到相关问题，试试其他关键词</div>`;
+      `}).join(''):`<div class="qa-empty">未找到相关问题，试试其他关键词</div>`;
 }
 function updateQAList(){
   // 只刷新问答列表，不重建输入框，避免打断输入法组合导致乱码
